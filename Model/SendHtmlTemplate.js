@@ -47,8 +47,8 @@ SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
 
       
         var compiled = ejs.compile(fs.readFileSync(template, 'utf8'));
-        console.log('data')
-        console.log(data)
+       // console.log('data')
+        //console.log(data)
         var html = compiled({ datas : data  });
         
  

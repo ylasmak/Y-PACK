@@ -4,6 +4,7 @@ var otp = require('otplib/lib/totp');
 
 var events = require('./Model/EVENTS');
 var email = require('./Model/SendHtmlTemplate');
+var mongo_db = require('./data_base/mongodb');
 var elastickSerach = require('./Model/ESQueryDSLTools')
 
 var router = express.Router();
@@ -26,46 +27,65 @@ router.get('/serach_lookup', function(req, res) {
                        
                if(result &&  result.length >0)
                    {   
+                      
+                       console.log(result)
                        for(var i = 0;i<result.length; i++)
                             {
+                              
                                var notification  = result[i]
-                               
-                               
                                var mail_result = {'text_mail' : notification["Text"], 'data' :[]}  
-                             
-                               /////////////////////////////////TEMP////////////////////////////////////////
-                               /////////////////////////////////////////////////////////////////////////////
-                               var criteriaList = [{'filed' : 'recu' ,'operator':'gte','value': '30000'}]
-                               /////////////////////////////////////////////////////////////////////////////
-                               /////////////////////////////////////////////////////////////////////////////
+                               criteriaList = notification["criteriaList"]
+                               var nextExecutionDate = notification['Last_execution']
                                
-                             var search = new  elastickSerach()
-                             search.ExecuteQuery(criteriaList,"afriqua_web_transaction_performence-",function(err,searchResult)
-                                                {
-                                 if(err)
-                                     {
-                                         console.log(err)
-                                     }
-                                 if(searchResult)
-                                     {
-                                         mail_result.data = searchResult
-                                         var sendSMTMail = new email()
-                                         sendSMTMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
-                                                   if(err)
-                                                       {
-                                                          res.send("Error 500") 
-                                                       }
-                                                 if(result)
-                                                           {
-                                                        res.send("OK 200") 
-                                                           }
-                                             
-                                            })
-                                        
-                                     }
-                             })
+                               nextExecutionDate.setMinutes(notification['Last_execution'].getMinutes() + notification['Frequency_min'])
+                               
+                                console.log(nextExecutionDate)
+                                var currentDate = new Date()                               
+                                console.log(currentDate)
+                               
+                               if(currentDate > nextExecutionDate )
+                                   {
+                                         console.log('in1')
+                                         var search = new  elastickSerach()
+                                                search.ExecuteQuery(criteriaList,notification['Index'],function(err,searchResult)
+                                                     {
+                                                         if(err)
+                                                             {
+                                                                 console.log(err)
+                                                             }
+                                                         if(searchResult)
+                                                             {
+                                                                 mail_result.data = searchResult
+                                                                 var sendSMTMail = new email()
+                                                                 sendSMTMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
+                                                                           if(err)
+                                                                               {
+                                                                                  res.send("Error 500") 
+                                                                               }
+                                                                       
+
+                                                                    })
+
+                                                             }
+                                                    }  ) 
+                                                
+                                    var mongo = new mongo_db()
+                                    mongo.updateExecutionDate('events',notification['_id'], currentDate,function(err,object)
+                                                             {
+                                        if(err)
+                                            {
+                                                console.log(err)
+                                                 res.send("Error 500") 
+                                            }
+
+
+                                    })
+                                }
+                                
+                              
                                 
                             }
+                       res.send("OK 200")
                        
                    }
                else

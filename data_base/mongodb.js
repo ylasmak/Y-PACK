@@ -92,5 +92,32 @@ MongoDb.prototype.collectionExist = function(collection, callback) {
 
     };
 
+MongoDb.prototype.updateExecutionDate = function(collection,id, currentDate,callback) {
+    
+    if (!collection) callback(collection, collection)
+        else {
+            MongoClient.connect(this.url, function(err, db) {
+
+                if (err) throw err;
+                
+                db.collection(collection).findAndModify(
+                      {_id: id},
+                        [],// query
+                      {$set: {Last_execution : currentDate}}, // replacement, replaces only the field "hi"
+                        { },
+                    function(err, object) {
+                          if (err){
+                              
+                              console.log(err)
+                            callback(err, null); // returns error if no matching object found
+                          }else{
+                             callback(err, object);
+                          }
+                      })
+               
+            });
+        }
+
+    };
 
 module.exports = MongoDb;

@@ -72,7 +72,7 @@ var buildQuery = function (criteriaList,index){
             
       var actionDate1 = new Date()    
       actionDate1.setDate(actionDate1.getDate() - 8)
-      console.log(actionDate1)
+    
    
    /* var dateCritérai = {
                 "range" : {
@@ -102,7 +102,7 @@ var buildQuery = function (criteriaList,index){
                     var  criteria =  criteriaList[i]
                     var tmp = {  "range": {  }  }
                     var  q = "{\""+ criteria['filed'] +"\":{\"" + criteria['operator']+"\" : \"" +criteria['value']+"\"}}";
-                    console.log(tmp)
+                    
                     tmp.range = JSON.parse(q)                   
                     query.body.query.bool.must.push(tmp)
                 }
@@ -127,7 +127,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
               
            
               var  query = buildQuery(criteriaList,index)   
-              console.log(JSON.stringify(query))
+             // console.log(JSON.stringify(query))
               client.search(query).then(function (body,err) {
 
                       if(err)

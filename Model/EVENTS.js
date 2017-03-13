@@ -15,11 +15,14 @@ var EVENTS = new Schema({
 
   Name: { type: String, required: true },
   Type: { type: String, required: true},
-  Query : {type: Object, required: true }, 
+  criteriaList : {type: Object, required: true }, 
   Send_to: [],
   Title :{type : String},  
-  Text :{ type : String} ,
-  update_at : String
+  Text :{ type : String},
+  update_at : String,
+  Frequency_min : Number,
+  Index : String,    
+  Last_execution : Date    
   
 });
 
