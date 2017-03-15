@@ -1,4 +1,6 @@
 var nodemailer = require('nodemailer')
+var smtpTransport = require('nodemailer-smtp-transport');
+
 var fs = require('fs');
 var ejs = require('ejs');
 
@@ -7,29 +9,41 @@ function SendHtmlTemplate() {
     
 }
 
-
 var sendMail = function(toAddress, subject, content, next){
-  var mailOptions = {
-    from: "ylasmak@gmail.com",
-    to: toAddress,
-    replyTo: "noreplay@monitoring.com",
-    subject: subject,
-    html: content
-  };
+      var mailOptions = {
+        from: "no-replay@wafacash.com",
+        to: toAddress,
+        replyTo: "noreplay@monitoring.com",
+        subject: subject,
+        html: content
+      };
 
-  smtpTransport.sendMail(mailOptions, next);
+  transporter.sendMail(mailOptions, next);
 }; 
 
 
 
 
+/* var transporter = nodemailer.createTransport(smtpTransport({
+    host: 'mail.wafacash.com',
+    port: 25,
+    auth: {
+        user: 'login',
+        pass: 'password'
+    },
+    secure:false,
+    tls: {rejectUnauthorized: false},
+    debug:true
+}));*/
+
 var smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-        user: 'ylasmak@gmail.com',
-        pass: 'machallah'
+        user: 'login@gmail.com',
+        pass: 'password'
     }
 });
+
 
 SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
   // res.render('index', { title: 'Express' });
@@ -53,12 +67,20 @@ SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
         
  
       sendMail(sendToList, title, html, function(err, response){
-       callback(err,response)
+      if(err)
+          {
+          console.log(err)
+          }
+          
+          callback(err,response)
       
           
       });
     }
   });
 };
+
+
+
 
 module.exports = SendHtmlTemplate

@@ -4,8 +4,10 @@ var otp = require('otplib/lib/totp');
 
 var events = require('./Model/EVENTS');
 var email = require('./Model/SendHtmlTemplate');
+var sendSMS = require('./Model/SendSMS')
 var mongo_db = require('./data_base/mongodb');
 var elastickSerach = require('./Model/ESQueryDSLTools')
+
 
 var router = express.Router();
 var urlencodedParser = bodyParser.urlencoded({
@@ -29,19 +31,17 @@ router.get('/serach_lookup', function(req, res) {
                    {   
                       
                        console.log(result)
-                       for(var i = 0;i<result.length; i++)
+                      // for(var i = 0;i<result.length; i++)
+                       result.forEach(function(notification)
                             {
                               
-                               var notification  = result[i]
+                         
                                var mail_result = {'text_mail' : notification["Text"], 'data' :[]}  
                                criteriaList = notification["criteriaList"]
                                var nextExecutionDate = notification['Last_execution']
                                
                                nextExecutionDate.setMinutes(notification['Last_execution'].getMinutes() + notification['Frequency_min'])
-                               
-                                console.log(nextExecutionDate)
-                                var currentDate = new Date()                               
-                                console.log(currentDate)
+                                var currentDate = new Date()   
                                
                                if(currentDate > nextExecutionDate )
                                    {
@@ -55,21 +55,46 @@ router.get('/serach_lookup', function(req, res) {
                                                              }
                                                          if(searchResult)
                                                              {
-                                                                 mail_result.data = searchResult
-                                                                 var sendSMTMail = new email()
-                                                                 sendSMTMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
-                                                                           if(err)
-                                                                               {
-                                                                                  res.send("Error 500") 
-                                                                               }
-                                                                       
+                                                                if(searchResult.length >0)
+                                                                { 
+                                                                    mail_result.data = searchResult
+                                                                     
+                                                                    if(notification['Type'] == 'EMAIL')
+                                                                    {
+                                                                      /* var sendSMTPMail = new email()  sendSMTPMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
+                                                                               if(err)
+                                                                                   {
+                                                                                      res.send("Error 500") 
+                                                                                   }
 
-                                                                    })
+
+                                                                        })*/
+                                                                    }
+                                                               
+                                                                  if(notification['Type'] == 'SMS')
+                                                                    {
+                                                                   console.log(email)
+                                                                   console.log('BBB')
+                                                                        console.log(sendSMS)
+                                                                    var sendBySMS = new sendSMS()
+                                                                    
+                                                                sendSMS.SMSNotify(notification['Send_to'],mail_result,function(err,result)
+                                                                                     {
+                                                                            if(err)
+                                                                                   {
+                                                                                      res.send("Error 500") 
+                                                                                   }
+
+                                                                            
+                                                                        })
+                                                                    }
+                                                                    
+                                                                }
 
                                                              }
                                                     }  ) 
                                                 
-                                    var mongo = new mongo_db()
+                                   /* var mongo = new mongo_db()
                                     mongo.updateExecutionDate('events',notification['_id'], currentDate,function(err,object)
                                                              {
                                         if(err)
@@ -79,18 +104,18 @@ router.get('/serach_lookup', function(req, res) {
                                             }
 
 
-                                    })
+                                    })*/
                                 }
                                 
                               
                                 
-                            }
-                       res.send("OK 200")
+                            })
+                      // res.send("OK 200")
                        
                    }
                else
                    {
-                         res.send("OK 200")
+                       //  res.send("OK 200")
                    }
            }
        

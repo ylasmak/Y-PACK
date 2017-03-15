@@ -7,10 +7,6 @@ var elasticsearch = require('elasticsearch');
 
 var TodayIndex = function(actionDate,index){  
  
-   var index_part =  actionDate.getFullYear() +"." + actionDate.getMonth() + "." + actionDate.getDay()
-   
-   index = index + index_part;
-
       var year = actionDate.getFullYear()
       var month = actionDate.getMonth() +1
       var day =actionDate.getDate()
@@ -56,7 +52,7 @@ var buildQuery = function (criteriaList,index){
     var actionDate = new Date() 
    var index =  TodayIndex(actionDate,index)
    
-   index = "afriqua_web_transaction_performence-2017.03.07"
+  
       
     
    var  query = {
@@ -71,16 +67,10 @@ var buildQuery = function (criteriaList,index){
                 }
             
       var actionDate1 = new Date()    
-      actionDate1.setDate(actionDate1.getDate() - 8)
+      actionDate1.setDate(actionDate1.getDate() - 1)
     
    
-   /* var dateCritérai = {
-                "range" : {
-                    "@timestamp" : {
-                        "gte" : actionDate
-                    }
-                }
-            } */
+
     
         var dateCritérai = {
                 "range" : {
@@ -127,7 +117,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
               
            
               var  query = buildQuery(criteriaList,index)   
-             // console.log(JSON.stringify(query))
+             console.log(JSON.stringify(query))
               client.search(query).then(function (body,err) {
 
                       if(err)
