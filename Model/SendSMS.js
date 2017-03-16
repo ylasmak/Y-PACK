@@ -1,54 +1,67 @@
 
-var accountSid = 'AC2f9abe85ad8dffdb2dd94f9e975ce8f9';
-var authToken = 'f840a2eaaf3f7d1a1c6cf89b50610789';
-var client = require('twilio')(accountSid, authToken);
+
+
 
 function SendSMS() {
       console.log('phoneNumbers')
 }
 
 
-var SendSMS = function(phoneNumber,text,calllback){
+var SendTwilioSMS = function(PhoneNumber,text,calllback){
     
-     client.messages.create({
+   var accountSid = 'AC2f9abe85ad8dffdb2dd94f9e975ce8f9';
+   var authToken = 'f840a2eaaf3f7d1a1c6cf89b50610789';
+    var client = require('twilio')(accountSid, authToken);
+    
+    console.log(PhoneNumber)
+    console.log(text)
+    client.messages.create({
 	to: PhoneNumber,
 	from: '+14438254761',
-	body: code,
+	body: text,
         }, function (err, message) {
            if(err)
                {
                   console.log(err)
                    
                }
+        
+                console.log(message)
             calllback(err,message)
      });
 }
 
-var BuildSMSText = function(object,mapping,callback){
+var BuildSMSText = function(object,mapping,text,callback){
     
-    var data =object.text_mail 
+    var data =text +" " 
+    console.log(object)
     
     mapping.forEach(function(key) {
-        data = data + ':' +object.data[key]
+        
+        data = data + key +':' + object[key]+ " "
         
     })
+    console.log(data)
+    return data
     
 }
 
-SendSMS.prototype.SMSNotify  = function(phoneNumbers,data,callback){
-    
-    console.log(phoneNumbers)
+SendSMS.prototype.SMSNotify  = function(phoneNumbers,object,mapping,callback){
+
+    console.log('SMSNotify')
     
     if(phoneNumbers.length >0)        
         {
+            
+            
             var datas = object.data
             var text = object.text_mail
-            console.log(phoneNumbers)
-            console.log(data)
+            
             phoneNumbers.forEach(function(number){
-                datas.forEach(function(data){
+                console.log(datas.length)
+                datas.forEach(function(line){
                     
-                    SendSMS(number,data,function(err,message)
+                    SendTwilioSMS(number, BuildSMSText(line,mapping,text),function(err,message)
                            {
                         callback(err,message)
                     })

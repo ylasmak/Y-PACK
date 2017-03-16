@@ -53,7 +53,7 @@ var buildQuery = function (criteriaList,index){
    var index =  TodayIndex(actionDate,index)
    
   
-      
+   index =  "afriqua_web_transaction_performence-2017.03.14"  
     
    var  query = {
                 "index" : index,
@@ -67,7 +67,7 @@ var buildQuery = function (criteriaList,index){
                 }
             
       var actionDate1 = new Date()    
-      actionDate1.setDate(actionDate1.getDate() - 1)
+      actionDate1.setDate(actionDate1.getDate() - 5)
     
    
 
@@ -127,7 +127,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
                           }
                       if(body)
                          {
-
+                           //  console.log(body)
                              var hits = body.hits.hits;
                             
 

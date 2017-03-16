@@ -30,7 +30,7 @@ router.get('/serach_lookup', function(req, res) {
                if(result &&  result.length >0)
                    {   
                       
-                       console.log(result)
+                      // console.log(result)
                       // for(var i = 0;i<result.length; i++)
                        result.forEach(function(notification)
                             {
@@ -53,10 +53,12 @@ router.get('/serach_lookup', function(req, res) {
                                                              {
                                                                  console.log(err)
                                                              }
+                                                    
                                                          if(searchResult)
                                                              {
                                                                 if(searchResult.length >0)
                                                                 { 
+                                                                   
                                                                     mail_result.data = searchResult
                                                                      
                                                                     if(notification['Type'] == 'EMAIL')
@@ -71,19 +73,19 @@ router.get('/serach_lookup', function(req, res) {
                                                                         })*/
                                                                     }
                                                                
+                                                                   
                                                                   if(notification['Type'] == 'SMS')
                                                                     {
-                                                                   console.log(email)
-                                                                   console.log('BBB')
-                                                                        console.log(sendSMS)
-                                                                    var sendBySMS = new sendSMS()
-                                                                    
-                                                                sendSMS.SMSNotify(notification['Send_to'],mail_result,function(err,result)
-                                                                                     {
-                                                                            if(err)
-                                                                                   {
-                                                                                      res.send("Error 500") 
-                                                                                   }
+                                                                          
+                                                                         var sendBySMS = new sendSMS()
+                                                                         
+                                                                    sendBySMS.SMSNotify(notification['Send_to'],mail_result,notification['Column'],function(err,result)
+                                                                                             {
+                                                                                    if(err)
+                                                                                           {
+                                                                                              res.send("Error 500") 
+                                                                                           }
+                                                                                    console.log(result)
 
                                                                             
                                                                         })

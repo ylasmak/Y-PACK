@@ -22,7 +22,8 @@ var EVENTS = new Schema({
   update_at : String,
   Frequency_min : Number,
   Index : String,    
-  Last_execution : Date    
+  Last_execution : Date,
+  Column : []    
   
 });
 
