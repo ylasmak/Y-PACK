@@ -13,10 +13,12 @@
     "express-fileupload": "0.0.5",
     "express-stormpath": "^3.1.5",
     "forms": "^1.2.0",
+    "html-pdf": "^2.1.0",
     "jade": "^1.11.0",
     "mongoose": "^4.6.3",
     "mongoose-geojson-schema": "^2.1.2",
     "multer": "^1.2.0",
+    "requestify": "^0.2.5",
     "xtend": "^4.0.1"
   }
 }

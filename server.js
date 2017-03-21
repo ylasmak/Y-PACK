@@ -4,6 +4,10 @@ var bodyParser = require('body-parser');
 var cookie = require('cookie-parser');
 var app = express();
 
+
+
+
+
 app.use(bodyParser.json());
  
 app.use(express.static(__dirname + '/public'));
@@ -11,6 +15,10 @@ app.use(express.static(__dirname + '/public'));
 app.use(session({secret: '1234567890QWERTY'}));
 //Routes
 app.use(require('./routes'));
+
+
+app.set('view engine', 'html');
+app.use(express.static(__dirname + '/public'));
 
  
 //app.use("/user",require('./routes'));  //http://127.0.0.1:8000/user  http://127.0.0.1:8000/user/about

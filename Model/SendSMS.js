@@ -10,11 +10,11 @@ function SendSMS() {
 var SendTwilioSMS = function(PhoneNumber,text,calllback){
     
    var accountSid = 'AC2f9abe85ad8dffdb2dd94f9e975ce8f9';
-   var authToken = 'f840a2eaaf3f7d1a1c6cf89b50610789';
+   
+    var authToken = 'f840a2eaaf3f7d1a1c6cf89b50610789';
     var client = require('twilio')(accountSid, authToken);
     
-    console.log(PhoneNumber)
-    console.log(text)
+   
     client.messages.create({
 	to: PhoneNumber,
 	from: '+14438254761',
@@ -47,8 +47,7 @@ var BuildSMSText = function(object,mapping,text,callback){
 }
 
 SendSMS.prototype.SMSNotify  = function(phoneNumbers,object,mapping,callback){
-
-    console.log('SMSNotify')
+    
     
     if(phoneNumbers.length >0)        
         {
