@@ -156,5 +156,11 @@ router.get('/Sending_report',function(req,res) {
 })
 
 
+//Graphical UI
+
+router.get(function (req,res)
+          {
+     res.render('index.ejs')
+})
 
 module.exports = router;
