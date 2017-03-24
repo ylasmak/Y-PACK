@@ -8,7 +8,7 @@ var sendSMS = require('./Model/SendSMS')
 var mongo_db = require('./data_base/mongodb');
 var elastickSerach = require('./Model/ESQueryDSLTools')
 var printPDF = require('./Model/PrintPDF')
-var phantom = require('node-phantom');
+var reporting = require('./Model/ReportModel')
 
 
 var router = express.Router();
@@ -27,12 +27,10 @@ router.get('/serach_lookup', function(req, res) {
                res.send("Error 500" + err)
            }
        else
-           {
-                       
+           {                       
                if(result &&  result.length >0)
-                   {   
-                      
-                      // console.log(result)
+                   { 
+                       // console.log(result)
                       // for(var i = 0;i<result.length; i++)
                        result.forEach(function(notification)
                             {
@@ -126,35 +124,35 @@ router.get('/serach_lookup', function(req, res) {
    })
 });
 
-router.get('/print_pdf',function(req,res) {
-    var child=require('child_process');
+router.get('/Sending_report',function(req,res) {
     
-    var url ='http://192.168.121.135:5601/app/kibana#/dashboard/POC1?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now%2FM,mode:quick,to:now%2FM))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:Activit%C3%A9,panelIndex:1,row:4,size_x:10,size_y:3,type:visualization),(col:1,id:Envoye_KB,panelIndex:2,row:7,size_x:10,size_y:5,type:visualization),(col:1,id:response_time,panelIndex:3,row:1,size_x:10,size_y:3,type:visualization),(col:1,id:Top-10-service,panelIndex:4,row:12,size_x:10,size_y:5,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:\'*\')),title:POC1,uiState:(P-2:(vis:(params:(sort:(columnIndex:2,direction:desc)))),P-4:(vis:(params:(sort:(columnIndex:!n,direction:!n))))))'
-   
-    var reportname = 'POC'
-    var reportType = 'pdf'
+    reporting.find({}).exec(function(err,result)
+                           {
+       if(err)
+           {
+               console.log(err)
+               res.send("Error 500" + err)
+           }
+       else
+           {                       
+               if(result &&  result.length >0)
+                   {
+                       tmp_folder = '/tmp/'
+                       result.forEach(function(report){
+                           //console.log(report)
+                           var pdf = new printPDF()
+                           pdf.UrlToPDF(report['Dashbord_uri'],report['Name'],report['Type'],tmp_folder,
+                                       function(err,result)
+                                       {
+                               console.log('end reporting')
+                               
+                           })
+                           
+                       })
+                   }
+            }
     
-    var args=[];
-    
-
-    
-    args=args.concat([__dirname + '/Model/bridge.js', url,reportname,reportType ]);
-
-    var phantom=child.spawn('phantomjs',args);
-    phantom.stdout.on('data',function(data){
-        return console.log('phantom stdout: '+data);
-    });
-    phantom.stderr.on('data',function(data){
-        return console.warn('phantom stderr: '+data);
-    });
-    var hasErrors=false;
-    phantom.on('error',function(){
-        hasErrors=true;
-    });
-    phantom.on('exit',function(code){
-        hasErrors=true; //if phantom exits it is always an error
-    });
-    
+})
 })
 
 

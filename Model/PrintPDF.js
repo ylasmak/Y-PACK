@@ -1,7 +1,4 @@
 
-var pdf = require('html-pdf');
-var requestify = require('requestify');
-var externalURL= 'http://www.google.com';
 
 function PrintPDF()
 {
@@ -10,19 +7,42 @@ function PrintPDF()
 
 
 
- PrintPDF.prototype.UrlToPDF  = function(externalURL,path){
+ PrintPDF.prototype.UrlToPDF  = function(url,reportname,reportType,reportFolder,callback){
+     
+     var child=require('child_process');
     
-     requestify.get(externalURL).then(function (response) {
-       // Get the raw HTML response body
-       var html = response.body; 
-       var config = {format: 'A4'}; // or format: 'letter' - see https://github.com/marcbachmann/node-html-pdf#options
+     
+    var args=[];
+     
+    args=args.concat([__dirname + '/bridge.js', url,reportname,reportType,reportFolder]);
 
-    // Create the PDF
-       pdf.create(html, config).toFile('generated.pdf', function (err, res) {
-          if (err) return console.log(err);
-          console.log(res); // { filename: '/pathtooutput/generated.pdf' }
-       })
-    })  
+    // console.log(args)
+    var phantom=child.spawn('phantomjs',args);
+    phantom.stdout.on('data',function(data){
+        if(data =='200')
+            {
+                
+                return callback(null,200)
+            }       
+        else
+            {
+        return console.log('phantom stdout: '+data);
+            }
+    });
+    phantom.stderr.on('data',function(data){
+        return console.warn('phantom stderr: '+data);
+    });
+    var hasErrors=false;
+    phantom.on('error',function(){
+        hasErrors=true;
+    });
+    phantom.on('exit',function(code){
+        hasErrors=true; //if phantom exits it is always an error
+    });
+    
+    
+    
+    
 }
 
  module.exports = PrintPDF
