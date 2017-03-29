@@ -31,6 +31,8 @@ var validator = (function($){
         complete        : 'input is not complete',
         select          : 'Please select an option'
     };
+    
+    
 
     if(!window.console){
         console={};
@@ -239,6 +241,8 @@ var validator = (function($){
         // if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
         var item = field.closest('.' + defaults.classes.item),
             warning;
+        
+    
 
         if( item.hasClass(defaults.classes.bad) ){
             if( defaults.alerts )
@@ -303,17 +307,21 @@ var validator = (function($){
     /* Checks a single form field by it's type and specific (custom) attributes
     */
     function checkField(){
+       
         // skip testing fields whom their type is not HIDDEN but they are HIDDEN via CSS.
         if( this.type !='hidden' && $(this).is(':hidden') )
             return true;
-
+       
         prepareFieldData(this);
+        
 
         field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );  // cache the value of the field and trim it
         data = field.data();
+        
 
         // Check if there is a specific error message for that field, if not, use the default 'invalid' message
         alertTxt = message[field.prop('name')] || message.invalid;
+      
 
         // Special treatment
         if( field[0].nodeName.toLowerCase() === "select" ){
@@ -363,6 +371,7 @@ var validator = (function($){
                 data.valid = testByType(data.type, data.val);
 
         }
+   
 
         // mark / unmark the field, and set the general 'submit' flag accordingly
         if( data.valid )

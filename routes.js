@@ -158,9 +158,24 @@ router.get('/Sending_report',function(req,res) {
 
 //Graphical UI
 
-router.get(function (req,res)
+router.get('/',function (req,res)
           {
-     res.render('index.ejs')
+        
+     res.render('pages/index.ejs')
+})
+
+
+router.get('/addEmailNotification',function(req,res)
+          {
+  
+     res.render('pages/emailNotification.ejs')
+    
+})
+
+router.post('/SaveEmailNotification',urlencodedParser,function(req,res)
+           {
+    console.log(req.body)
+    
 })
 
 module.exports = router;

@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Elastic OpenAlert</title>
+
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+      
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span> OpenAlert</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="images/img.png" alt="..." class="img-circle profile_img">
+              </div>
+              
+            </div>
+            <!-- /menu profile quick info -->
+
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+               
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-home"></i> E-Mail Notification </a>
+                    
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> SMS Notification </a>
+                    
+                  </li>
+                  <li><a><i class="fa fa-desktop"></i> E-Mail Reporting  </a>
+                    
+                  </li>
+                  
+                </ul>
+              </div>
+            
+
+            </div>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+              
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Elastic OpenAlert </h3>
+              </div>
+
+             
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Email Notification <small>add new Event </small></h2>
+                  
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="" >
+
+                    <form class="form-horizontal form-label-left" novalidate id="surveyForm" method="post" action="/SaveEmailNotification">
+
+                      <span class="section">Notification Info</span>
+
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Notification Name  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="My Notification" required="required" type="text">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email_title">Email Title <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="email_title" name="email_title" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                        
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"> Email Text
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="x_content">
+                      <div id="alerts"></div>
+                      <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor-one">
+                        <div class="btn-group">
+                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font" aria-expanded="false"><i class="fa fa-font"></i><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                          </ul>
+                        </div>
+
+                        <div class="btn-group">
+                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a data-edit="fontSize 5">
+                                <p style="font-size:17px">Huge</p>
+                              </a>
+                            </li>
+                            <li>
+                              <a data-edit="fontSize 3">
+                                <p style="font-size:14px">Normal</p>
+                              </a>
+                            </li>
+                            <li>
+                              <a data-edit="fontSize 1">
+                                <p style="font-size:11px">Small</p>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div class="btn-group">
+                          <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                          <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                          <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                          <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                        </div>
+
+                        <div class="btn-group">
+                          <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                          <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                          <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                          <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                        </div>
+
+                        <div class="btn-group">
+                          <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                          <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                          <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                          <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                        </div>
+
+                        <div class="btn-group">
+                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                          <div class="dropdown-menu input-append">
+                            <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                            <button class="btn" type="button">Add</button>
+                          </div>
+                          <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                        </div>
+
+
+
+                        <div class="btn-group">
+                          <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
+                          <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                        </div>
+                      </div>
+
+                      <div id="editor-one" class="editor-wrapper placeholderText" contenteditable="true"></div>
+                      <textarea name="descr" id="descr" style="display:none;" ></textarea>
+
+                      <br>
+
+
+                    </div>
+                    </div>
+                      </div>
+                        
+                        
+                      <div class="item form-group"  id="fields">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Send email to <span class="required">*</span>
+                        </label>
+                          <div class ="distinationEmail col-md-6 col-sm-6 col-xs-12">
+                               <div class="entry input-group ">                                 
+                                       <input type="email" id="email_0" name="email_0" required="required" class="form-control col-md-7 col-xs-12">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success btn-add" type="button">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                         </div>
+                      </div>
+                        
+                     <div class="item form-group"  id="fields">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Criteria List <span class="required">*</span>
+                        </label>
+                          <div class ="criteriaList col-md-6 col-sm-6 col-xs-12">
+                             <div class="entry input-group ">                                 
+                                 <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <input type="text" id="criteria_0" name="criteria[]" required="required"                                          class="criteria_field form-control" >
+                                  </div>
+                                   
+                                <div class="col-md-3 col-sm-12 col-xs-12">
+                                  <select class="form-control" tabindex="-1" type ="text" id="operator_0" name ="operator[]" required="required">
+                                    <option value="eq">=</option>
+                                    <option value="gt">></option>
+                                    <option value="gte">>=</option>
+                                    <option value="lt">&lt;</option>
+                                    <option value="lte">&lt;=</option>
+                                    <option value="neq">&lt;></option>
+                                  </select>
+                                </div>
+                                
+                                 
+                                 
+                                 <div class="col-md-3 col-sm-12 col-xs-12">
+                                    <input type="text" id="value_0" name="value[]" required="required" class="form-control">
+                                  </div>
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success btn-add2" type="button">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </span>
+                            </div>
+                         </div>
+                      </div>    
+                        
+                        
+                     
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                          <button type="submit" class="btn btn-primary">Cancel</button>
+                          <button id="send" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/vendors/nprogress/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="/vendors/iCheck/icheck.min.js"></script>
+    <!-- Datatables -->
+    <script src="/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/vendors/pdfmake/build/vfs_fonts.js"></script>
+      
+      
+      <!-- bootstrap-wysiwyg -->
+    <script src="/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
+    <script src="/vendors/google-code-prettify/src/prettify.js"></script>
+      
+    <!-- validation -->
+    <script src="vendors/validator/validator.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="/build/js/custom.min.js"></script>
+      
+  <script>
+      $(function()
+        {
+          var mailcpt = 0;
+          var operatorcpr = 0
+
+            $(document).on('click', '.btn-add', function(e)
+            {
+         
+               mailcpt = mailcpt +1;
+                e.preventDefault();
+
+                var controlForm = $('.distinationEmail:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+               
+                
+                  newEntry.find('input').val('');
+                var name  = 'email_' + mailcpt
+                
+                 newEntry.find('input').attr('id',name);
+      
+                
+                controlForm.find('.entry:not(:last) .btn-add')
+                    .removeClass('btn-add').addClass('btn-remove')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span>');
+            }).on('click', '.btn-remove', function(e)
+            {
+                $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+          
+          
+          $(document).on('click', '.btn-add2', function(e)
+            {   
+         
+               operatorcpr = operatorcpr +1;
+                e.preventDefault();
+
+                var controlForm = $('.criteriaList:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+               
+                
+                  newEntry.find('input ').val('');
+                
+                 newEntry.find('input').attr('id',name);
+               
+                console.log( newEntry.find('input'))
+                controlForm.find('.entry:not(:last) .btn-add2')
+                    .removeClass('btn-add2').addClass('btn-remove2')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span>');
+            }).on('click', '.btn-remove2', function(e)
+            {
+                $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+        });
+      </script>
+
+  </body>
+</html>
