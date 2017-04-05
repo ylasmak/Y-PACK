@@ -1,4 +1,5 @@
 var elasticsearch = require('elasticsearch');
+var Guid = require('Guid');
 
  var client = new elasticsearch.Client({
           host: '192.168.121.135:9200'
@@ -117,7 +118,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
               
            
               var  query = buildQuery(criteriaList,index)   
-             console.log(JSON.stringify(query))
+                  
               client.search(query).then(function (body,err) {
 
                       if(err)
@@ -147,6 +148,30 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
              );
           }
         });
+}
+
+
+ESQueryDSLTools.prototype.PushQuery = function(document,callback){
+    
+    var guid = Guid.raw()
+    console.log(guid)
+    
+    client.create({
+          index: 'elk_open_alert',
+          type: 'alert',
+          id:  guid,
+          body: document
+        }, function (error, response) {
+          if(error)
+              {
+                  console.log(error)
+              }
+        else
+            {
+                 console.log(response)
+            }
+        callback(error,response)
+});
 }
 
 module.exports = ESQueryDSLTools

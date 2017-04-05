@@ -30,12 +30,9 @@ router.get('/serach_lookup', function(req, res) {
            {                       
                if(result &&  result.length >0)
                    { 
-                       // console.log(result)
-                      // for(var i = 0;i<result.length; i++)
+                       
                        result.forEach(function(notification)
                             {
-                              
-                         
                                var mail_result = {'text_mail' : notification["Text"], 'data' :[]}  
                                criteriaList = notification["criteriaList"]
                                var nextExecutionDate = notification['Last_execution']
@@ -173,8 +170,75 @@ router.get('/addEmailNotification',function(req,res)
 })
 
 router.post('/SaveEmailNotification',urlencodedParser,function(req,res)
-           {
-    console.log(req.body)
+  {
+    
+    var data  = req.body;
+    console.log(data)
+    
+  
+    
+    let email = []
+    if(Array.isArray(data.email))
+        {
+           email  = data.email
+        }
+    else
+        {
+         email.push(data.email)   
+        }
+    
+      let criterias = []    
+        if(Array.isArray(data.criteria))
+            {
+                for(i=0;i< data.criteria.length;i++)
+                    {
+                          let criteria = {        
+                                "filed" :data.criteria[i] ,
+                                "operator" :data.operator[i],
+                                "value" : data.value[i]
+                          }
+                          criterias.push(criteria)
+                    }
+            }
+        else
+            {
+                  let criteria = {        
+                                "filed" :data.criteria ,
+                                "operator" :data.operator,
+                                "value" : data.value
+                          }
+                          criterias.push(criteria)
+
+            }
+    
+      var entry = {    
+            "Name" :  data['name'],
+            "Type" : "EMAIL",
+            "Title" : data['email_title'],
+            "criteriaList" : criterias,
+            "update_at" : new Date(),
+            "Text" : data['descr'],
+            "Send_to" : email,
+            "Last_execution" : new Date(),
+            "Index" : data['index'],
+            "Frequency_min" : data['frequency']
+            }
+    
+  
+     var search = new  elastickSerach()
+     search.PushQuery(entry,function(err,result)
+                     {
+         if(err)
+             {
+                 console.log(err)
+             }
+         else
+             {
+                  req.method = 'get';
+                res.redirect('/');
+             }
+         
+     })
     
 })
 
