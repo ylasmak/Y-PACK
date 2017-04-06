@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Elastic OpenAlert</title>
+
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+      
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span> OpenAlert</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="images/img.png" alt="..." class="img-circle profile_img">
+              </div>
+              
+            </div>
+            <!-- /menu profile quick info -->
+
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+               
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-home"></i> E-Mail Notification </a>
+                    
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> SMS Notification </a>
+                    
+                  </li>
+                  <li><a><i class="fa fa-desktop"></i> E-Mail Reporting  </a>
+                    
+                  </li>
+                  
+                </ul>
+              </div>
+            
+
+            </div>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+              
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Elastic OpenAlert </h3>
+              </div>
+
+             
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>SMS Notification <small>add new Event </small></h2>
+                  
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="" >
+
+                    <form class="form-horizontal form-label-left" novalidate id="SMSNotificationForm" method="post" action="/SaveSMSNotification" onSubmit="document.EmailNotificationForm.wyswyg.descr.value = $('#editor-one').html()">
+
+                      <span class="section">Notification Info</span>
+
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Notification Name  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6"  name="name" placeholder="My Notification" required="required" type="text">
+                        </div>
+                      </div>
+                     
+                        
+                      <div class="item form-group" id="wyswyg">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"> SMS Text
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">   
+                            <textarea name="descr" id="descr"  rows="5" class="form-control col-md-7 col-xs-12"></textarea>
+                        </div>
+                      </div>
+                        
+                        <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="index">Index <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="index" name="index" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                        
+                        <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="frequency">Frequency <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="frequency" name="frequency" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>    
+                        
+                      <div class="item form-group"  id="fields">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Send SMS to <span class="required">*</span>
+                        </label>
+                          <div class ="distinationEmail col-md-6 col-sm-6 col-xs-12">
+                               <div class="entry input-group ">                                 
+                                     <input id="phoneNumber_0" name="phoneNumber" type="text" class="form-control" data-inputmask="'mask' : '(999) 999-999999'">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success btn-add" type="button">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                         </div>
+                      </div>
+                        
+                        
+                        <div class="item form-group"  id="fields">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Add fileds to SMS <span class="required">*</span>
+                        </label>
+                          <div class ="smsFileds col-md-6 col-sm-6 col-xs-12">
+                               <div class="entry input-group ">                                 
+                                     <input id="smsFileds" name="smsFileds" type="text" class="form-control" >
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success btn-add-fileds" type="button">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                         </div>
+                      </div>
+                        
+                        
+                     <div class="item form-group"  id="fields">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Criteria List <span class="required">*</span>
+                        </label>
+                          <div class ="criteriaList col-md-6 col-sm-6 col-xs-12">
+                             <div class="entry input-group ">                                 
+                                 <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <input type="text" id="criteria_0" name="criteria" required="required"                                          class="criteria_field form-control" >
+                                  </div>
+                                   
+                                <div class="col-md-3 col-sm-12 col-xs-12">
+                                  <select class="form-control" tabindex="-1" type ="text" id="operator_0" name ="operator" required="required">
+                                    <option value="eq">=</option>
+                                    <option value="gt">></option>
+                                    <option value="gte">>=</option>
+                                    <option value="lt">&lt;</option>
+                                    <option value="lte">&lt;=</option>
+                                    <option value="neq">&lt;></option>
+                                  </select>
+                                </div>
+                                
+                                 
+                                 
+                                 <div class="col-md-3 col-sm-12 col-xs-12">
+                                    <input type="text" id="value_0" name="value" required="required" class="form-control">
+                                  </div>
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success btn-add2" type="button">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </span>
+                            </div>
+                         </div>
+                      </div>    
+                        
+                    
+                     
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                          <button type="submit" class="btn btn-primary">Cancel</button>
+                          <button id="send" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/vendors/nprogress/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="/vendors/iCheck/icheck.min.js"></script>
+    <!-- Datatables -->
+    <script src="/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/vendors/pdfmake/build/vfs_fonts.js"></script>
+      
+
+      
+      <!-- jquery.inputmask -->
+    <script src="/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>  
+      
+    <!-- validation -->
+    <script src="vendors/validator/validator.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="/build/js/custom.min.js"></script>
+      
+  <script>
+     
+      $(function()
+        {
+          var mailcpt = 0;
+          var operatorcpr = 0
+
+            $(document).on('click', '.btn-add', function(e)
+            {
+         
+               mailcpt = mailcpt +1;
+                e.preventDefault();
+
+                var controlForm = $('.distinationEmail:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+               
+                
+                  newEntry.find('input').val('');
+                
+                controlForm.find('.entry:not(:last) .btn-add')
+                    .removeClass('btn-add').addClass('btn-remove')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span>');
+            }).on('click', '.btn-remove', function(e)
+            {
+                $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+          
+           $(document).on('click', '.btn-add-fileds', function(e)
+            {
+         
+             
+                e.preventDefault();
+
+                var controlForm = $('.smsFileds:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+               
+                
+                  newEntry.find('input').val('');
+                
+                controlForm.find('.entry:not(:last) .btn-add-fileds')
+                    .removeClass('btn-add-fileds').addClass('btn-remove')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span>');
+               
+            }).on('click', 'btn-remove', function(e)
+            {
+               console.log('rmove') 
+               $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+          
+          
+          
+          $(document).on('click', '.btn-add2', function(e)
+            {   
+         
+               operatorcpr = operatorcpr +1;
+                e.preventDefault();
+
+                var controlForm = $('.criteriaList:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+               
+                
+                  newEntry.find('input ').val('');
+                
+                 newEntry.find('input').attr('id',name);
+               
+                
+                controlForm.find('.entry:not(:last) .btn-add2')
+                    .removeClass('btn-add2').addClass('btn-remove2')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span>');
+            }).on('click', '.btn-remove2', function(e)
+            {
+                $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+        });
+      </script>
+
+  </body>
+</html>

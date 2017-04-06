@@ -169,6 +169,15 @@ router.get('/addEmailNotification',function(req,res)
     
 })
 
+router.get('/addSMSNotification',function(req,res)
+          {
+  
+     res.render('pages/smsNotification.ejs')
+    
+})
+
+
+
 router.post('/SaveEmailNotification',urlencodedParser,function(req,res)
   {
     
@@ -240,6 +249,89 @@ router.post('/SaveEmailNotification',urlencodedParser,function(req,res)
          
      })
     
+})
+
+router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
+    
+     var data  = req.body;
+    console.log('SaveSMSNotification')
+    console.log(data)
+    
+  
+    
+    let phoneNumber = []
+    if(Array.isArray(data.email))
+        {
+           phoneNumber  = data.phoneNumber
+        }
+    else
+        {
+         phoneNumber.push(data.phoneNumber)   
+        }
+    
+      let criterias = []    
+        if(Array.isArray(data.criteria))
+            {
+                for(i=0;i< data.criteria.length;i++)
+                    {
+                          let criteria = {        
+                                "filed" :data.criteria[i] ,
+                                "operator" :data.operator[i],
+                                "value" : data.value[i]
+                          }
+                          criterias.push(criteria)
+                    }
+            }
+        else
+            {
+                  let criteria = {        
+                                "filed" :data.criteria ,
+                                "operator" :data.operator,
+                                "value" : data.value
+                          }
+                          criterias.push(criteria)
+
+            }
+    
+    let fileds = []
+        if(Array.isArray(data.smsFileds))
+        {
+           fileds  = data.smsFileds
+        }
+    else
+        {
+         fileds.push(data.smsFileds)   
+        }
+    
+      var entry = {    
+            "Name" :  data['name'],
+            "Type" : "SMS",
+            "criteriaList" : criterias,
+            "update_at" : new Date(),
+            "Text" : data['descr'],
+            "Send_to" : phoneNumber,
+             "Column" : fileds,
+            "Last_execution" : new Date(),
+            "Index" : data['index'],
+            "Frequency_min" : data['frequency']
+            }
+    
+      console.log(entry)
+  
+     var search = new  elastickSerach()
+     search.PushQuery(entry,function(err,result)
+                     {
+         if(err)
+             {
+                 console.log(err)
+             }
+         else
+             {
+                  req.method = 'get';
+                res.redirect('/');
+             }
+         
+     })
 })
 
 module.exports = router;
