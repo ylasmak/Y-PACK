@@ -50,7 +50,7 @@ var buildQuery = function (criteriaList,index){
     
   
    
-    var actionDate = new Date() 
+   var actionDate = new Date() 
    var index =  TodayIndex(actionDate,index)
    
   
@@ -105,6 +105,59 @@ var buildQuery = function (criteriaList,index){
    
 }
 
+ESQueryDSLTools.prototype.ExecuteAllQuery = function(index,callback){
+    
+    var result = []
+    client.ping({
+      // ping usually has a 3000ms timeout
+      requestTimeout: 5000
+        }, function (error) {
+          if (error) {
+            console.trace('elasticsearch cluster is down!');
+          } else {
+              
+           
+              var  query = {
+                "index" : index,
+                "body" : {
+                    "query" : {
+                         "match_all" : {}
+                        }
+                    }
+                }
+                  
+              client.search(query).then(function (body,err) {
+
+                      if(err)
+                          {
+                              console.log(err)
+                              callback(err,"")
+                          }
+                      if(body)
+                         {
+                         //  console.log(JSON.stringify(body).pretty())
+                             var hits = body.hits.hits;
+                            
+
+                             if(hits.length > 0)
+                                 {
+                                     for(j=0;j<hits.length;j++)
+                                         {
+                                                
+                                            result.push(hits[j])
+                                         }
+                                     
+                                 }
+                            
+                             callback(null,result)
+                         }
+                }
+             );
+          }
+        });
+}
+
+    
 ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
     
     var result = []

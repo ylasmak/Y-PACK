@@ -155,10 +155,55 @@ router.get('/Sending_report',function(req,res) {
 
 //Graphical UI
 
-router.get('/',function (req,res)
-          {
+router.get('/',function (req,res) {
+     var search = new  elastickSerach()
+     search.ExecuteAllQuery('elk_open_alert',function(error,result){
+         
+       var emailNotification = []
+       var smsNotificattion = []
+       var report = []
+       
+    
+         if(result.length > 0)
+        {            
+            
+             
+           for(let i =0;i< result.length  ;i++)
+               {
+                   
+                  if(result[i]['_source']['Type'] == 'EMAIL')
+                        {
+                         
+                            emailNotification.push(result[i])
+                        }
+
+                     if(result[i]['_source']['Type'] == 'SMS')
+                        {
+                            smsNotificattion.push(result[i])
+                        }
+
+                     if(result[i]['_source']['Type'] == 'Report')
+                        {
+                            report.push(result[i])
+                        }
+                        
+               }
+            
+                 res.render('pages/index.ejs',{
+                     emailNotification : emailNotification,
+                     smsNotificattion : smsNotificattion,
+                     report : report
+                 })
+           
+        }
+         else
+             {
+                 console.log('false')
+             }
+         
+     })
         
-     res.render('pages/index.ejs')
+    
 })
 
 
@@ -177,15 +222,18 @@ router.get('/addSMSNotification',function(req,res)
 })
 
 
+router.get('/addEmailReport',function(req,res)
+          {
+    res.render('pages/emailReport.ejs')
+    
+})
 
-router.post('/SaveEmailNotification',urlencodedParser,function(req,res)
-  {
+
+
+router.post('/SaveEmailNotification',urlencodedParser,function(req,res)  {
     
     var data  = req.body;
-    console.log(data)
-    
-  
-    
+      
     let email = []
     if(Array.isArray(data.email))
         {
@@ -332,6 +380,55 @@ router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
              }
          
      })
+})
+
+router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
+    
+       var data  = req.body;
+ 
+    
+  
+    
+    let email = []
+    if(Array.isArray(data.email))
+        {
+           email  = data.email
+        }
+    else
+        {
+         email.push(data.email)   
+        }
+    
+    
+    
+      var entry = {    
+            "Name" :  data['name'],
+            "Type" : "Report",
+            "Title" : data['email_title'],
+            "update_at" : new Date(),
+            "Text" : data['descr'],
+            "Send_to" : email,
+            "Last_execution" : new Date(),
+            "dashbord_url" : data['dashbord_url'],
+            "execute_at" : data['frequency']
+            }   
+    
+  
+     var search = new  elastickSerach()
+     search.PushQuery(entry,function(err,result)
+                     {
+         if(err)
+             {
+                 console.log(err)
+             }
+         else
+             {
+                  req.method = 'get';
+                res.redirect('/');
+             }
+         
+     })
+    
 })
 
 module.exports = router;

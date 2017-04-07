@@ -127,28 +127,18 @@
                           <th></th> 
                         </tr>
                       </thead>
-                      <tbody>
+                     <tbody>                        
+                          <% for(let i= 0;i< emailNotification.length;i++) { %>
                         <tr>
-                          <td>Tiger</td>
-                          <td>Nixon</td>
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td><a href="#/pencil-square-o"><i class="fa fa-edit"></i></a></td>
-                          <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>
-                          
+                          <td><%=emailNotification[i]['_source']['Name'] %></td>   
+                          <td><%=emailNotification[i]['_source']['Title'] %></td>     
+                          <td><%=emailNotification[i]['_source']['Index'] %></td>
+                          <td><%=emailNotification[i]['_source']['Frequency_min'] %></td>
+                          <td><%=emailNotification[i]['_source']['Last_execution'] %></td>
+                          <td><a href="/addEmailNotification?_id=<%=emailNotification[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
+                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                        <tr>
-                          <td>Garrett</td>
-                          <td>Winters</td>
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>63</td>
-                           <td><a href="#/pencil-square-o"><i class="fa fa-edit"></i></a></td>
-                         <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>
-                          
-                        </tr>
-                       
+                       <% }%>
                       </tbody>
                     </table>
 					
@@ -161,8 +151,6 @@
                 <div class="x_panel">
                   <div class="x_title">
                     <h2>SMS Notification</h2>
-                  
-                      
                       <ul class="nav navbar-right panel_toolbox">
                         
                          <li><a href="/addSMSNotification"><i class="fa fa-plus"></i></a>
@@ -184,25 +172,17 @@
                           <th></th> 
                         </tr>
                       </thead>
-                      <tbody>
+                     <tbody>                        
+                          <% for(let i= 0;i< smsNotificattion.length;i++) { %>
                         <tr>
-                          <td>Tiger</td>                        
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td><a href="#/pencil-square-o"><i class="fa fa-edit"></i></a></td>
-                          <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>
-                          
+                          <td><%=smsNotificattion[i]['_source']['Name'] %></td>                             
+                          <td><%=smsNotificattion[i]['_source']['Index'] %></td>
+                          <td><%=smsNotificattion[i]['_source']['Frequency_min'] %></td>
+                          <td><%=smsNotificattion[i]['_source']['Last_execution'] %></td>
+                          <td><a href="/addSMSNotification?_id=<%=smsNotificattion[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
+                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                        <tr>
-                          <td>Garrett</td>                         
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>63</td>
-                           <td><a href="#/pencil-square-o"><i class="fa fa-edit"></i></a></td>
-                         <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
-                        </tr>
-                       
+                       <% }%>
                       </tbody>
                     </table>
 					
@@ -215,9 +195,11 @@
                   <div class="x_title">
                     <h2>Email Reporting</h2>
                     <ul class="nav navbar-right panel_toolbox">
+                        
+                         <li><a href="/addEmailReport"><i class="fa fa-plus"></i></a>
+                      </li>
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
-                    
                     </ul>
                     <div class="clearfix"></div>
                   </div>
@@ -227,51 +209,23 @@
                     <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th>First name</th>
-                          <th>Last name</th>
-                          <th>Position</th>
-                          <th>Office</th>
-                          <th>Age</th>
-                          <th>Start date</th>
-                          <th>Salary</th>
-                          <th>Extn.</th>
-                          <th>E-mail</th>
+                          <th>Notification Name</th>                         
+                          <th>Execute report at </th>
+                          <th>Last execution date</th>
+                          <th></th>   
+                          <th></th> 
                         </tr>
                       </thead>
-                      <tbody>
+                     <tbody>                        
+                          <% for(let i= 0;i< report.length;i++) { %>
                         <tr>
-                          <td>Tiger</td>
-                          <td>Nixon</td>
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td>2011/04/25</td>
-                          <td>$320,800</td>
-                          <td>5421</td>
-                          <td>t.nixon@datatables.net</td>
+                          <td><%=report[i]['_source']['Name'] %></td>                             
+                          <td><%=report[i]['_source']['execute_at'] %></td>
+                          <td><%=report[i]['_source']['Last_execution'] %></td>
+                          <td><a href="/addSMSNotification?_id=<%=report[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
+                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                        <tr>
-                          <td>Garrett</td>
-                          <td>Winters</td>
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>63</td>
-                          <td>2011/07/25</td>
-                          <td>$170,750</td>
-                          <td>8422</td>
-                          <td>g.winters@datatables.net</td>
-                        </tr>
-                        <tr>
-                          <td>Ashton</td>
-                          <td>Cox</td>
-                          <td>Junior Technical Author</td>
-                          <td>San Francisco</td>
-                          <td>66</td>
-                          <td>2009/01/12</td>
-                          <td>$86,000</td>
-                          <td>1562</td>
-                          <td>a.cox@datatables.net</td>
-                        </tr>                       
+                       <% }%>
                       </tbody>
                     </table>	
                   </div>
