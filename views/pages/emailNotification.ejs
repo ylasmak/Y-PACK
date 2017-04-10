@@ -111,19 +111,54 @@
                     <form class="form-horizontal form-label-left" novalidate id="EmailNotificationForm" method="post" action="/SaveEmailNotification" onSubmit="document.EmailNotificationForm.wyswyg.descr.value = $('#editor-one').html()">
 
                       <span class="section">Notification Info</span>
-
-                      <div class="item form-group">
+                    
+                        
+                    <% 
+                        var notifiaction_name = ""
+                        var email_title = ""
+                        var email_text =""
+                        var index = ""
+                        var frequecy =""
+                        var _id =""
+                        var sendTo=[]
+                        var criterias = []
+                        
+                        if(notification)
+                            {
+                                notifiaction_name = notification['_source']['Name']
+                                email_title = notification['_source']['Title']
+                                email_text =notification['_source']['Text']
+                                index =notification['_source']['Index']
+                                frequecy =notification['_source']['Frequency_min']
+                                sendTo=notification['_source']['Send_to']
+                                criterias = notification['_source']['criteriaList']
+                                _id = notification['_id']                                
+                            }
+                        
+                    %>
+                        
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name"> 
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="_id" class="form-control col-md-7 col-xs-12"  name="_id"  required="required" type="hidden" value ="<%=_id %>">
+                        </div>
+                      </div>
+                        
+                        
+                         <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Notification Name  <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="My Notification" required="required" type="text">
+                          <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="My Notification" required="required" type="text" value ="<%=notifiaction_name %>">
                         </div>
                       </div>
+                        
                       <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email_title">Email Title <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="email_title" name="email_title" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="email_title" name="email_title" required="required" class="form-control col-md-7 col-xs-12" value ="<%=email_title %>">
                         </div>
                       </div>
                         
@@ -131,7 +166,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"> Email Text
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">   
-                            <textarea name="descr" id="descr"  rows="5" class="form-control col-md-7 col-xs-12"></textarea>
+                            <textarea name="descr" id="descr"  rows="5" class="form-control col-md-7 col-xs-12"><%=email_title %></textarea>
                         </div>
                       </div>
                         
@@ -139,7 +174,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="index">Index <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="index" name="index" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="index" name="index" required="required" class="form-control col-md-7 col-xs-12" value ="<%=index %>">
                         </div>
                       </div>
                         
@@ -147,14 +182,20 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="frequency">Frequency <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="frequency" name="frequency" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="frequency" name="frequency" required="required" class="form-control col-md-7 col-xs-12" value ="<%=frequecy %>">
                         </div>
                       </div>    
                         
                       <div class="item form-group"  id="fields">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Send email to <span class="required">*</span>
                         </label>
-                          <div class ="distinationEmail col-md-6 col-sm-6 col-xs-12">
+                           <div class ="distinationEmail col-md-6 col-sm-6 col-xs-12">
+                         <% if(sendTo.length == 0)
+                              {
+                          %>
+                          
+                          
+                         
                                <div class="entry input-group ">                                 
                                        <input type="email" id="email_0" name="email" required="required" class="form-control col-md-7 col-xs-12">
                                     <span class="input-group-btn">
@@ -163,14 +204,62 @@
                                         </button>
                                     </span>
                                 </div>
-                         </div>
+                        
+                          
+                          <% 
+                            }
+                            else
+                            {
+                            
+                            for(var i =0 ;i<sendTo.length;i++ )
+                                {
+                             %>       
+                               
+                                   <div class="entry input-group ">                                 
+                                           <input type="email" id="email_0" name="email" required="required" class="form-control col-md-7 col-xs-12" value ="<%=sendTo[i] %>">
+                                        <span class="input-group-btn">
+                                            <%  if( i !=sendTo.length -1)
+                                                {
+                                                %>
+                                            <button class="btn btn-danger btn-remove" type="button">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                            <% }
+                                                else
+                                                    {
+                                                      %>
+                                            
+                                            <button class="btn btn-success btn-add" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                                <%                                                        
+                                                    }
+                                                %>
+                                        </span>
+                                    </div>
+                              
+                          
+                          <%
+                                }
+                           }
+                          %>
+                          
+                         </div>  
+                          
                       </div>
                         
                      <div class="item form-group"  id="fields">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Criteria List <span class="required">*</span>
                         </label>
                           <div class ="criteriaList col-md-6 col-sm-6 col-xs-12">
-                             <div class="entry input-group ">                                 
+                            
+                            <%
+                              
+                            if(criterias.length == 0)
+                                {
+                            %>  
+                              
+                              <div class="entry input-group ">                                 
                                  <div class="col-md-6 col-sm-12 col-xs-12">
                                     <input type="text" id="criteria_0" name="criteria" required="required"                                          class="criteria_field form-control" >
                                   </div>
@@ -198,6 +287,125 @@
                                     </button>
                                 </span>
                             </div>
+                              
+                              <% }
+                                  
+                                else
+                                    {
+                                       for(j= 0;j< criterias.length; j++)
+                                           {
+                                  %>
+                                      <div class="entry input-group ">                                 
+                                         <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <input type="text" id="criteria_0" name="criteria" required="required"                                          class="criteria_field form-control"  value ="<%= criterias[j]['filed']%>">
+                                          </div>
+                                          
+                                           <div class="col-md-3 col-sm-12 col-xs-12">
+                                          <select class="form-control" tabindex="-1" type ="text" id="operator_0" name ="operator" required="required" >
+                                              
+                                              <% if(criterias[j]['operator'] == "eq" ) {%>
+                                                <option value="eq" selected >=</option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                <option value="eq" >=</option>
+                                              <%  
+                                                } 
+                                              %>
+                                                 
+                                                                                              
+                                              <% if(criterias[j]['operator'] == "gt")  {%>
+                                                 <option value="gt" selected >></option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                <option value="gt" >></option>
+                                              <%  
+                                                } 
+                                              %>
+                                                
+                                                   
+                                               <% if(criterias[j]['operator'] == "gte")  {%>
+                                                <option value="gte" selected >>=</option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                 <option value="gte" >>=</option>
+                                              <%  
+                                                } 
+                                              %>
+                                              
+                                               <% if(criterias[j]['operator'] == "lt")  {%>
+                                                <option value="lt" selected >&lt;</option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                 <option value="lt" >&lt;</option>
+                                              <%  
+                                                } 
+                                              %>
+                                                  
+                                              <% if(criterias[j]['operator'] == "lte")  {%>
+                                                <option value="lte" selected >&lt;=</option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                 <option value="lte" >&lt;=</option>
+                                              <%  
+                                                } 
+                                              %>
+                                                  
+                                             <% if(criterias[j]['operator'] == "neq")  {%>
+                                                <option value="neq" selected >&lt;></option>
+                                              <% 
+                                              }
+                                              else
+                                              {%>
+                                                 <option value="neq" >&lt;></option>
+                                              <%  
+                                                } 
+                                              %>
+                                             
+                                           
+                                          </select>
+                                        </div>
+
+                                         <div class="col-md-3 col-sm-12 col-xs-12">
+                                            <input type="text" id="value_0" name="value" required="required" class="form-control"  value ="<%= criterias[j]['value']%>">
+                                          </div>
+                                          
+                                          <span class="input-group-btn">
+                                            <%  if( j !=criterias.length -1)
+                                                {
+                                                %>
+                                            <button class="btn btn-danger btn-remove2" type="button">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                            <% }
+                                                else
+                                                    {
+                                                      %>
+                                            
+                                             <button class="btn btn-success btn-add2" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                                <%                                                        
+                                                    }
+                                                %>
+                                        </span>
+
+                                    </div>
+                              
+                              <% 
+                                        }
+                              
+                              } %>
+                              
                          </div>
                       </div>    
                         
@@ -212,6 +420,8 @@
                       </div>
                     </form>
                   </div>
+                    
+                    
                 </div>
               </div>
             </div>

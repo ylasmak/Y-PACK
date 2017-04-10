@@ -179,6 +179,7 @@ router.get('/',function (req,res) {
 
                      if(result[i]['_source']['Type'] == 'SMS')
                         {
+                          
                             smsNotificattion.push(result[i])
                         }
 
@@ -188,6 +189,8 @@ router.get('/',function (req,res) {
                         }
                         
                }
+            
+         
             
                  res.render('pages/index.ejs',{
                      emailNotification : emailNotification,
@@ -206,29 +209,39 @@ router.get('/',function (req,res) {
     
 })
 
-
-router.get('/addEmailNotification',function(req,res)
-          {
+router.get('/addEmailNotification',urlencodedParser,function(req,res) {    
+    if(req.query._id)
+        {
+            var search = new  elastickSerach()
+                 console.log(req.query._id)
+                 search.GetDocumentById(req.query._id,function(err,result){
+                   if(result)
+                       {                               
+                             res.render('pages/emailNotification.ejs',{notification : result})
+                       }
+                 })
+                 
+                 
+        }
+    else
+        {
+             res.render('pages/emailNotification.ejs',{notification : null})
+        }
   
-     res.render('pages/emailNotification.ejs')
+    
     
 })
 
-router.get('/addSMSNotification',function(req,res)
-          {
+router.get('/addSMSNotification',urlencodedParser,function(req,res) {
   
      res.render('pages/smsNotification.ejs')
     
 })
 
-
-router.get('/addEmailReport',function(req,res)
-          {
+router.get('/addEmailReport',urlencodedParser,function(req,res) {
     res.render('pages/emailReport.ejs')
     
 })
-
-
 
 router.post('/SaveEmailNotification',urlencodedParser,function(req,res)  {
     
@@ -280,22 +293,60 @@ router.post('/SaveEmailNotification',urlencodedParser,function(req,res)  {
             "Index" : data['index'],
             "Frequency_min" : data['frequency']
             }
+      
+       var search = new  elastickSerach()
+      if(! data['_id'])
+          {
+            
+                 search.PushQuery(entry,function(err,result)
+                                 {
+                     if(err)
+                         {
+                             console.log(err)
+                         }
+                     else
+                         {
+                              req.method = 'get';
+                            res.redirect('/');
+                         }
+
+                 }) 
+          }
+    else
+        {
+            search.GetDocumentById(data['_id'],function(err,result)
+                                  {
+                
+                if(!err)
+                    {
+                        entry['Last_execution'] = result['_source']['Last_execution']
+                          search.DeleteQuery(data['_id'],function(err,result){
+                                 if(!err)
+                                     {
+                                       search.PushQuery(entry,function(err,result)
+                                                     {
+                                         if(err)
+                                             {
+                                                 console.log(err)
+                                             }
+                                         else
+                                             {
+                                                  req.method = 'get';
+                                                res.redirect('/');
+                                             }
+
+                                     })     
+                                     }
+                             })
+                        
+                    }
+                
+            })
+        }
+      
     
   
-     var search = new  elastickSerach()
-     search.PushQuery(entry,function(err,result)
-                     {
-         if(err)
-             {
-                 console.log(err)
-             }
-         else
-             {
-                  req.method = 'get';
-                res.redirect('/');
-             }
-         
-     })
+     
     
 })
 
@@ -428,6 +479,21 @@ router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
              }
          
      })
+    
+})
+
+router.get('/delete',urlencodedParser,function(req,res) {
+    
+     var search = new  elastickSerach()
+   
+     search.DeleteQuery(req.query._id,function(err,result){
+         if(!err)
+             {
+                   req.method = 'get';
+                res.redirect('/');
+             }
+     })
+    
     
 })
 

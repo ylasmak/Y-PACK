@@ -136,7 +136,7 @@
                           <td><%=emailNotification[i]['_source']['Frequency_min'] %></td>
                           <td><%=emailNotification[i]['_source']['Last_execution'] %></td>
                           <td><a href="/addEmailNotification?_id=<%=emailNotification[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
-                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
+                        <td><a href="/delete?_id=<%=emailNotification[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
                        <% }%>
                       </tbody>
@@ -180,7 +180,7 @@
                           <td><%=smsNotificattion[i]['_source']['Frequency_min'] %></td>
                           <td><%=smsNotificattion[i]['_source']['Last_execution'] %></td>
                           <td><a href="/addSMSNotification?_id=<%=smsNotificattion[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
-                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
+                        <td><a href="/delete?_id=<%=smsNotificattion[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
                        <% }%>
                       </tbody>
@@ -222,8 +222,8 @@
                           <td><%=report[i]['_source']['Name'] %></td>                             
                           <td><%=report[i]['_source']['execute_at'] %></td>
                           <td><%=report[i]['_source']['Last_execution'] %></td>
-                          <td><a href="/addSMSNotification?_id=<%=report[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
-                        <td><a href="#/times"><i class="fa fa-remove"></i> </a></td>                          
+                          <td><a href="/addEmailReport?_id=<%=report[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
+                        <td><a href="/delete?_id=<%=report[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
                        <% }%>
                       </tbody>

@@ -57,6 +57,7 @@ var buildQuery = function (criteriaList,index){
    index =  "afriqua_web_transaction_performence-2017.03.14"  
     
    var  query = {
+                "size" : 16,
                 "index" : index,
                 "body" : {
                     "query" : {
@@ -118,6 +119,7 @@ ESQueryDSLTools.prototype.ExecuteAllQuery = function(index,callback){
               
            
               var  query = {
+                "size" : 1024,
                 "index" : index,
                 "body" : {
                     "query" : {
@@ -135,7 +137,7 @@ ESQueryDSLTools.prototype.ExecuteAllQuery = function(index,callback){
                           }
                       if(body)
                          {
-                         //  console.log(JSON.stringify(body).pretty())
+                        
                              var hits = body.hits.hits;
                             
 
@@ -161,8 +163,7 @@ ESQueryDSLTools.prototype.ExecuteAllQuery = function(index,callback){
 ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
     
     var result = []
-    client.ping({
-      // ping usually has a 3000ms timeout
+    client.ping({     
       requestTimeout: 5000
         }, function (error) {
           if (error) {
@@ -207,11 +208,11 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
 ESQueryDSLTools.prototype.PushQuery = function(document,callback){
     
     var guid = Guid.raw()
-    console.log(guid)
-    
+      
     client.create({
           index: 'elk_open_alert',
           type: 'alert',
+          refresh : 'true',
           id:  guid,
           body: document
         }, function (error, response) {
@@ -219,12 +220,36 @@ ESQueryDSLTools.prototype.PushQuery = function(document,callback){
               {
                   console.log(error)
               }
-        else
-            {
-                 console.log(response)
-            }
+        
         callback(error,response)
 });
 }
+
+ESQueryDSLTools.prototype.DeleteQuery = function(_id, callback) {
+    
+    client.delete({
+              index: 'elk_open_alert',
+              type: 'alert',
+              refresh : 'true',
+              id: _id
+            }, function (error, response) {
+       
+               callback(error,response)
+            });
+}
+
+ESQueryDSLTools.prototype.GetDocumentById = function(_id,callback){
+    
+        client.get({
+              index: 'elk_open_alert',
+              type: 'alert',
+              id: _id
+            }, function (error, response) {
+             
+                callback(error,response)
+            });
+    
+}
+
 
 module.exports = ESQueryDSLTools
