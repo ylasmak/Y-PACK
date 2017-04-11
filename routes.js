@@ -234,12 +234,50 @@ router.get('/addEmailNotification',urlencodedParser,function(req,res) {
 
 router.get('/addSMSNotification',urlencodedParser,function(req,res) {
   
-     res.render('pages/smsNotification.ejs')
+    if(req.query._id)
+        {
+            var search = new  elastickSerach()
+               
+                 search.GetDocumentById(req.query._id,function(err,result){
+                   if(result)
+                       {  
+                           console.log(result)
+                             res.render('pages/smsNotification.ejs',{notification : result})
+                       }
+                 })
+                 
+                 
+        }
+    else
+        {
+             res.render('pages/smsNotification.ejs',{notification : null})
+        }
+    
+    
     
 })
 
 router.get('/addEmailReport',urlencodedParser,function(req,res) {
-    res.render('pages/emailReport.ejs')
+   
+    if(req.query._id)
+        {
+            var search = new  elastickSerach()
+                 console.log(req.query._id)
+                 search.GetDocumentById(req.query._id,function(err,result){
+                   if(result)
+                       {                               
+                             res.render('pages/emailReport.ejs',{notification : result})
+                       }
+                 })
+                 
+                 
+        }
+    else
+        {
+             res.render('pages/emailReport.ejs',{notification : null})
+        }
+    
+    
     
 })
 
@@ -353,13 +391,9 @@ router.post('/SaveEmailNotification',urlencodedParser,function(req,res)  {
 router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
     
      var data  = req.body;
-    console.log('SaveSMSNotification')
-    console.log(data)
-    
-  
     
     let phoneNumber = []
-    if(Array.isArray(data.email))
+    if(Array.isArray(data.phoneNumber))
         {
            phoneNumber  = data.phoneNumber
         }
@@ -415,22 +449,57 @@ router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
             "Frequency_min" : data['frequency']
             }
     
-      console.log(entry)
   
      var search = new  elastickSerach()
-     search.PushQuery(entry,function(err,result)
-                     {
-         if(err)
-             {
-                 console.log(err)
-             }
-         else
-             {
-                  req.method = 'get';
-                res.redirect('/');
-             }
-         
-     })
+     
+         if(! data['_id'])
+          {
+            
+                 search.PushQuery(entry,function(err,result)
+                                 {
+                     if(err)
+                         {
+                             console.log(err)
+                         }
+                     else
+                         {
+                              req.method = 'get';
+                            res.redirect('/');
+                         }
+
+                 }) 
+          }
+    else
+        {
+            search.GetDocumentById(data['_id'],function(err,result)
+                                  {
+                
+                if(!err)
+                    {
+                        entry['Last_execution'] = result['_source']['Last_execution']
+                          search.DeleteQuery(data['_id'],function(err,result){
+                                 if(!err)
+                                     {
+                                       search.PushQuery(entry,function(err,result)
+                                                     {
+                                         if(err)
+                                             {
+                                                 console.log(err)
+                                             }
+                                         else
+                                             {
+                                                  req.method = 'get';
+                                                res.redirect('/');
+                                             }
+
+                                     })     
+                                     }
+                             })
+                        
+                    }
+                
+            })
+        }
 })
 
 router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
