@@ -107,23 +107,53 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="" >
+                      
+                      <% 
+                        var notifiaction_name = ""
+                        var report_title = ""
+                        var report_text =""
+                        var execute_at =""
+                        var _id =""
+                        var sendTo=[]
+                        var dashbord_url = ""
+                        
+                        if(notification)
+                            {
+                                notifiaction_name = notification['_source']['Name']
+                                report_title = notification['_source']['Title']
+                                report_text =notification['_source']['Text']
+                                execute_at =notification['_source']['execute_at']
+                                sendTo=notification['_source']['Send_to']
+                                dashbord_url = notification['_source']['dashbord_url']
+                                _id = notification['_id']                                
+                            }
+                        
+                    %>
 
                     <form class="form-horizontal form-label-left" novalidate id="EmailReportForm" method="post" action="/SaveEmailReport" >
 
                       <span class="section">Report Info</span>
+                        
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name"> 
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="_id" class="form-control col-md-7 col-xs-12"  name="_id"  required="required" type="hidden" value ="<%=_id %>">
+                        </div>
+                      </div>
 
                       <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report Name  <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="My Notification" required="required" type="text">
+                          <input id="name" name="name" class="form-control col-md-7 col-xs-12" value ="<%=notifiaction_name %>" required="required" type="text">
                         </div>
                       </div>
                       <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email_title">Report Title <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="report_title" name="report_title" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="report_title" name="report_title" required="required" class="form-control col-md-7 col-xs-12" value ="<%=report_title %>">
                         </div>
                       </div>
                         
@@ -131,7 +161,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"> Report Text
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">   
-                            <textarea name="descr" id="descr"  rows="5" class="form-control col-md-7 col-xs-12"></textarea>
+                            <textarea name="descr" id="descr"  rows="5" class="form-control col-md-7 col-xs-12"><%=report_text %></textarea>
                         </div>
                       </div>
                         
@@ -139,7 +169,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="index">Dashbord URL <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="dashbord_url" name="dashbord_url" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="dashbord_url" name="dashbord_url" required="required" class="form-control col-md-7 col-xs-12" value="<%=dashbord_url%>">
                         </div>
                       </div>
                         
@@ -147,7 +177,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="frequency">exexute report at <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="frequency" name="frequency" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="frequency" name="frequency" required="required" class="form-control col-md-7 col-xs-12" value="<%=execute_at%>">
                         </div>
                         </div>    
                         
@@ -155,6 +185,14 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="field">Send email to <span class="required">*</span>
                         </label>
                           <div class ="distinationEmail col-md-6 col-sm-6 col-xs-12">
+                               
+                              
+                              <% if(sendTo.length == 0)
+                              {
+                          %>
+                          
+                          
+                         
                                <div class="entry input-group ">                                 
                                        <input type="email" id="email_0" name="email" required="required" class="form-control col-md-7 col-xs-12">
                                     <span class="input-group-btn">
@@ -163,6 +201,48 @@
                                         </button>
                                     </span>
                                 </div>
+                        
+                          
+                          <% 
+                            }
+                            else
+                            {
+                            
+                            for(var i =0 ;i<sendTo.length;i++ )
+                                {
+                             %>       
+                               
+                                   <div class="entry input-group ">                                 
+                                           <input type="email" id="email_0" name="email" required="required" class="form-control col-md-7 col-xs-12" value ="<%=sendTo[i] %>">
+                                        <span class="input-group-btn">
+                                            <%  if( i !=sendTo.length -1)
+                                                {
+                                                %>
+                                            <button class="btn btn-danger btn-remove" type="button">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                            <% }
+                                                else
+                                                    {
+                                                      %>
+                                            
+                                            <button class="btn btn-success btn-add" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                                <%                                                        
+                                                    }
+                                                %>
+                                        </span>
+                                    </div>
+                              
+                          
+                          <%
+                                }
+                           }
+                          %>
+                        
+                              
+                              
                          </div>
                       </div>
                         

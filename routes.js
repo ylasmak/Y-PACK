@@ -265,7 +265,7 @@ router.get('/addEmailReport',urlencodedParser,function(req,res) {
                  console.log(req.query._id)
                  search.GetDocumentById(req.query._id,function(err,result){
                    if(result)
-                       {                               
+                       {  console.log(result)                            
                              res.render('pages/emailReport.ejs',{notification : result})
                        }
                  })
@@ -449,7 +449,7 @@ router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
             "Frequency_min" : data['frequency']
             }
     
-  
+      
      var search = new  elastickSerach()
      
          if(! data['_id'])
@@ -524,7 +524,7 @@ router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
       var entry = {    
             "Name" :  data['name'],
             "Type" : "Report",
-            "Title" : data['email_title'],
+            "Title" : data['report_title'],
             "update_at" : new Date(),
             "Text" : data['descr'],
             "Send_to" : email,
