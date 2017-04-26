@@ -140,7 +140,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name"> 
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="_id" class="form-control col-md-7 col-xs-12"  name="_id"  required="required" type="hidden" value ="<%=_id %>">
+                          <input id="_id" class="form-control col-md-7 col-xs-12"  name="_id"   type="hidden" value ="<%=_id %>">
                         </div>
                       </div>
 
@@ -185,7 +185,7 @@
                             <% if(sendTo.length == 0 ) {%>
                                   
                               <div class="entry input-group ">                                 
-                                     <input id="phoneNumber_0" name="phoneNumber" type="text" class="form-control" data-inputmask="'mask' : '(999) 999-999999'">
+                                     <input id="phoneNumber_0" name="phoneNumber" type="text" class="form-control" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-success btn-add" type="button">
                                             <span class="glyphicon glyphicon-plus"></span>
@@ -202,7 +202,7 @@
                                   %>  
                               
                                <div class="entry input-group ">                                 
-                                     <input id="phoneNumber_0" name="phoneNumber" type="text" class="form-control" data-inputmask="'mask' : '(999) 999-999999'" value="<%=sendTo[i] %>">
+                                     <input id="phoneNumber_0" name="phoneNumber" type="text" class="form-control" value="<%=sendTo[i] %>">
                                      <span class="input-group-btn">
                                             <%  if( i !=sendTo.length -1)
                                                 {
@@ -234,10 +234,6 @@
                         </label>
                           <div class ="smsFileds col-md-6 col-sm-6 col-xs-12">
                               
-                              
-                             
-                              
-                              
                               <% if(columns.length == 0 ) {%>
                                   
                                <div class="entry input-group ">                                 
@@ -252,7 +248,7 @@
                                   
                             else 
                                 {
-                                    for(j= 0;j< sendTo.length ;j++)
+                                    for(j= 0;j< columns.length ;j++)
                                         {
                                             
                                   %>  
@@ -260,7 +256,7 @@
                                <div class="entry input-group ">                                 
                                      <input id="smsFileds" name="smsFileds" type="text" class="form-control" value="<%=columns[j] %>">
                                      <span class="input-group-btn">
-                                            <%  if( j !=sendTo.length -1)
+                                            <%  if( j !=columns.length -1)
                                                 {
                                                 %>
                                             <button class="btn btn-danger btn-remove" type="button">
@@ -271,7 +267,7 @@
                                                     {
                                                       %>
                                             
-                                            <button class="btn btn-success btn-add" type="button">
+                                            <button class="btn btn-success btn-add-fileds" type="button">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </button>
                                                 <%                                                        

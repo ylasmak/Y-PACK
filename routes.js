@@ -1,11 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var otp = require('otplib/lib/totp');
+var fs = require('fs');
 
-var events = require('./Model/EVENTS');
+//var events = require('./Model/EVENTS');
 var email = require('./Model/SendHtmlTemplate');
 var sendSMS = require('./Model/SendSMS')
-var mongo_db = require('./data_base/mongodb');
+//var mongo_db = require('./data_base/mongodb');
 var elastickSerach = require('./Model/ESQueryDSLTools')
 var printPDF = require('./Model/PrintPDF')
 var reporting = require('./Model/ReportModel')
@@ -19,8 +19,11 @@ var urlencodedParser = bodyParser.urlencoded({
 
 router.get('/serach_lookup', function(req, res) {
     
-   events.find({}).exec(function(err,result)
-                           {
+   
+    var elastic = new elastickSerach()
+    
+    elastic.ExecuteAllQuery('elk_open_alert',function(err,result)
+         {
        if(err)
            {
                console.log(err)
@@ -28,28 +31,30 @@ router.get('/serach_lookup', function(req, res) {
            }
        else
            {                       
+               
                if(result &&  result.length >0)
-                   { 
-                       
-                       result.forEach(function(notification)
+                   {                       
+                      
+                       result.forEach(function(notificationDefinition)
                             {
-                               var mail_result = {'text_mail' : notification["Text"], 'data' :[]}  
-                               criteriaList = notification["criteriaList"]
-                               var nextExecutionDate = notification['Last_execution']
-                               
-                               nextExecutionDate.setMinutes(notification['Last_execution'].getMinutes() + notification['Frequency_min'])
+                          console.log(notificationDefinition)
+                              
+                            var notification = notificationDefinition['_source']                             
+                            var mail_result = {'text_mail' : notification["Text"], 'data' :[],_id :notificationDefinition['_id'] };                        
+                            criteriaList = notification["criteriaList"]
+                            var lastExecution = notification['Last_execution']                               
+                            var lastExecutionDate = new Date(lastExecution)
+                                
+                            var nextExecutionDate = new Date(lastExecutionDate.getTime() +(1000* 60 * (notification['Frequency_min'])))
                                 var currentDate = new Date()   
-                               
+                                
                                if(currentDate > nextExecutionDate )
                                    {
-                                         console.log('in1')
-                                         var search = new  elastickSerach()
-                                                search.ExecuteQuery(criteriaList,notification['Index'],function(err,searchResult)
-                                                     {
+                                        var search = new  elastickSerach(); search.ExecuteQuery(criteriaList,notification['Index'],lastExecutionDate,function(err,searchResult)      {
                                                          if(err)
                                                              {
                                                                  console.log(err)
-                                                             }
+                                                             }                                        
                                                     
                                                          if(searchResult)
                                                              {
@@ -60,30 +65,30 @@ router.get('/serach_lookup', function(req, res) {
                                                                      
                                                                     if(notification['Type'] == 'EMAIL')
                                                                     {
-                                                                      /* var sendSMTPMail = new email()  sendSMTPMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
+                                                                       var sendSMTPMail = new email();
+                                                                        sendSMTPMail.SendeMail(notification['Send_to'],notification['Title'],mail_result,function(err,result){
                                                                                if(err)
                                                                                    {
                                                                                       res.send("Error 500") 
                                                                                    }
 
 
-                                                                        })*/
+                                                                        })
                                                                     }
                                                                
-                                                                   
+                                                                  
                                                                   if(notification['Type'] == 'SMS')
                                                                     {
                                                                           
-                                                                         var sendBySMS = new sendSMS()
-                                                                         
+                                                                     var sendBySMS = new sendSMS()
+                                                                     
                                                                     sendBySMS.SMSNotify(notification['Send_to'],mail_result,notification['Column'],function(err,result)
                                                                                              {
                                                                                     if(err)
                                                                                            {
                                                                                               res.send("Error 500") 
                                                                                            }
-                                                                                    console.log(result)
-
+                                                                        
                                                                             
                                                                         })
                                                                     }
@@ -110,7 +115,7 @@ router.get('/serach_lookup', function(req, res) {
                                 
                             })
                       // res.send("OK 200")
-                       
+                     
                    }
                else
                    {
@@ -123,7 +128,8 @@ router.get('/serach_lookup', function(req, res) {
 
 router.get('/Sending_report',function(req,res) {
     
-    reporting.find({}).exec(function(err,result)
+    var elastic = new elastickSerach()
+     elastic.GetReportTypeQuery(function(err,result)
                            {
        if(err)
            {
@@ -134,22 +140,38 @@ router.get('/Sending_report',function(req,res) {
            {                       
                if(result &&  result.length >0)
                    {
-                       tmp_folder = '/tmp/'
+                   
+                      var tmp_folder = '/tmp/openalert/'
+                       
+                         if(!fs.existsSync(tmp_folder))
+                          {
+                              fs.mkdirSync(tmp_folder);
+                          }
+                       
                        result.forEach(function(report){
-                           //console.log(report)
+                           
                            var pdf = new printPDF()
-                           pdf.UrlToPDF(report['Dashbord_uri'],report['Name'],report['Type'],tmp_folder,
+                           pdf.UrlToPDF(report['dashbord_url'],report['Name'],'pdf',tmp_folder,
                                        function(err,result)
                                        {
-                               console.log('end reporting')
+                               if(err)
+                                   {
+                                       console.log(err)
+                                   }
+                               else
+                                   {
+                                      console.log(result)
+                                   }
+                             
                                
                            })
                            
-                       })
+                       })                       
+                       
                    }
             }
     
-})
+    })
 })
 
 
@@ -202,6 +224,11 @@ router.get('/',function (req,res) {
          else
              {
                  console.log('false')
+                  res.render('pages/index.ejs',{
+                     emailNotification : null,
+                     smsNotificattion : null,
+                     report : null
+                 })
              }
          
      })
@@ -284,6 +311,7 @@ router.get('/addEmailReport',urlencodedParser,function(req,res) {
 router.post('/SaveEmailNotification',urlencodedParser,function(req,res)  {
     
     var data  = req.body;
+  
       
     let email = []
     if(Array.isArray(data.email))
@@ -505,9 +533,6 @@ router.post('/SaveSMSNotification',urlencodedParser,function(req,res){
 router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
     
        var data  = req.body;
- 
-    
-  
     
     let email = []
     if(Array.isArray(data.email))

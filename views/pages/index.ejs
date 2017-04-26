@@ -127,7 +127,8 @@
                           <th></th> 
                         </tr>
                       </thead>
-                     <tbody>                        
+                     <tbody>  
+                         <% if(emailNotification) { %> 
                           <% for(let i= 0;i< emailNotification.length;i++) { %>
                         <tr>
                           <td><%=emailNotification[i]['_source']['Name'] %></td>   
@@ -138,7 +139,8 @@
                           <td><a href="/addEmailNotification?_id=<%=emailNotification[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
                         <td><a href="/delete?_id=<%=emailNotification[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                       <% }%>
+                       <% }
+                         }%>
                       </tbody>
                     </table>
 					
@@ -173,7 +175,9 @@
                         </tr>
                       </thead>
                      <tbody>                        
-                          <% for(let i= 0;i< smsNotificattion.length;i++) { %>
+                          <%
+                         if(smsNotificattion) {
+                         for(let i= 0;i< smsNotificattion.length;i++) { %>
                         <tr>
                           <td><%=smsNotificattion[i]['_source']['Name'] %></td>                             
                           <td><%=smsNotificattion[i]['_source']['Index'] %></td>
@@ -182,7 +186,8 @@
                           <td><a href="/addSMSNotification?_id=<%=smsNotificattion[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
                         <td><a href="/delete?_id=<%=smsNotificattion[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                       <% }%>
+                       <% }
+                         }%>
                       </tbody>
                     </table>
 					
@@ -217,7 +222,9 @@
                         </tr>
                       </thead>
                      <tbody>                        
-                          <% for(let i= 0;i< report.length;i++) { %>
+                          <%
+                         if(report) {
+                         for(let i= 0;i< report.length;i++) { %>
                         <tr>
                           <td><%=report[i]['_source']['Name'] %></td>                             
                           <td><%=report[i]['_source']['execute_at'] %></td>
@@ -225,7 +232,8 @@
                           <td><a href="/addEmailReport?_id=<%=report[i]['_id'] %>"><i class="fa fa-edit"></i></a></td>
                         <td><a href="/delete?_id=<%=report[i]['_id'] %>%>"><i class="fa fa-remove"></i> </a></td>                          
                         </tr>
-                       <% }%>
+                       <% }
+                         }%>
                       </tbody>
                     </table>	
                   </div>

@@ -1,7 +1,4 @@
 
-
-
-
 function SendSMS() {
       console.log('phoneNumbers')
 }
@@ -9,8 +6,7 @@ function SendSMS() {
 
 var SendTwilioSMS = function(PhoneNumber,text,calllback){
     
-   var accountSid = 'AC2f9abe85ad8dffdb2dd94f9e975ce8f9';
-   
+    var accountSid = 'AC2f9abe85ad8dffdb2dd94f9e975ce8f9';   
     var authToken = 'f840a2eaaf3f7d1a1c6cf89b50610789';
     var client = require('twilio')(accountSid, authToken);
     
@@ -26,42 +22,41 @@ var SendTwilioSMS = function(PhoneNumber,text,calllback){
                    
                }
         
-                console.log(message)
+              
             calllback(err,message)
      });
 }
 
 var BuildSMSText = function(object,mapping,text,callback){
     
-    var data =text +" " 
-    console.log(object)
+    var data =text +"\r\n " 
+   
     
     mapping.forEach(function(key) {
         
-        data = data + key +':' + object[key]+ " "
+        data = data + key +':' + object[key]+ "\r\n "
         
     })
-    console.log(data)
+    
     return data
     
 }
 
 SendSMS.prototype.SMSNotify  = function(phoneNumbers,object,mapping,callback){
     
-    
-    if(phoneNumbers.length >0)        
-        {
-            
-            
+  
+    if(phoneNumbers.length > 0)        
+        {  
             var datas = object.data
             var text = object.text_mail
             
             phoneNumbers.forEach(function(number){
-                console.log(datas.length)
+               
                 datas.forEach(function(line){
                     
                     SendTwilioSMS(number, BuildSMSText(line,mapping,text),function(err,message)
                            {
+                      
                         callback(err,message)
                     })
                     

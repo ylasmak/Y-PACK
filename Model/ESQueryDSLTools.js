@@ -1,5 +1,5 @@
 var elasticsearch = require('elasticsearch');
-var Guid = require('Guid');
+var uuid = require('uuid-lib');
 
  var client = new elasticsearch.Client({
           host: '192.168.121.135:9200'
@@ -8,36 +8,46 @@ var Guid = require('Guid');
 
 var TodayIndex = function(actionDate,index){  
  
-      var year = actionDate.getFullYear()
-      var month = actionDate.getMonth() +1
-      var day =actionDate.getDate()
-      var month_string  =''
-       var day_string =''
-      
-      if(month < 10)
-          {
-               month_string = '0'+month
-          }
-        else
-            {
-                 month_string = ''+month
-            }
-        
-      
-      
-      if(day<10)
-          {
-              day_string = '0'+day
-          }
-        else
-            {
-            day_string = ''+day
-            }
     
-      index_part =  year +"." + month_string + "." + day_string
-      index = index + index_part;
- 
-      return index
+    if(index.endsWith('*'))
+        {
+            
+            index = index.substr(0,index.length - 1)
+            var year = actionDate.getFullYear()
+              var month = actionDate.getMonth() +1
+              var day =actionDate.getDate()
+              var month_string  =''
+               var day_string =''
+
+              if(month < 10)
+                  {
+                       month_string = '0'+month
+                  }
+                else
+                    {
+                         month_string = ''+month
+                    }
+
+
+
+              if(day<10)
+                  {
+                      day_string = '0'+day
+                  }
+                else
+                    {
+                    day_string = ''+day
+                    }
+
+              index_part =  year +"." + month_string + "." + day_string
+              index = index + index_part;
+
+              return index
+        }
+    else
+        {
+            return index
+        }
     
 }
 
@@ -46,7 +56,7 @@ function ESQueryDSLTools() {
     
 }
 
-var buildQuery = function (criteriaList,index){
+var buildQuery = function (criteriaList,index,lastExecutionDate){
     
   
    
@@ -54,10 +64,11 @@ var buildQuery = function (criteriaList,index){
    var index =  TodayIndex(actionDate,index)
    
   
-   index =  "afriqua_web_transaction_performence-2017.03.14"  
+  // index =  "afriqua_web_transaction_performence-2017.04.19"  
+        
     
    var  query = {
-                "size" : 16,
+              
                 "index" : index,
                 "body" : {
                     "query" : {
@@ -68,16 +79,13 @@ var buildQuery = function (criteriaList,index){
                     }
                 }
             
-      var actionDate1 = new Date()    
-      actionDate1.setDate(actionDate1.getDate() - 5)
-    
-   
-
+    var actionDate1 = new Date()    
+      actionDate1.setDate(actionDate1.getDate() - 15)
     
         var dateCritérai = {
                 "range" : {
                     "@timestamp" : {
-                        "gte" : actionDate1
+                        "gte" : lastExecutionDate
                     }
                 }
             }
@@ -99,6 +107,7 @@ var buildQuery = function (criteriaList,index){
                     query.body.query.bool.must.push(tmp)
                 }
              
+           //console.log(JSON.stringify( query))
              return query
     
         }
@@ -159,8 +168,8 @@ ESQueryDSLTools.prototype.ExecuteAllQuery = function(index,callback){
         });
 }
 
-    
-ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
+
+ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,lastExecutionDate,callback){
     
     var result = []
     client.ping({     
@@ -171,7 +180,10 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
           } else {
               
            
-              var  query = buildQuery(criteriaList,index)   
+              var  query = buildQuery(criteriaList,index,lastExecutionDate)   
+              
+            
+              
                   
               client.search(query).then(function (body,err) {
 
@@ -182,9 +194,8 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
                           }
                       if(body)
                          {
-                           //  console.log(body)
+                          //console.log(JSON.stringify( body))
                              var hits = body.hits.hits;
-                            
 
                              if(hits.length > 0)
                                  {
@@ -195,7 +206,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
                                          }
                                      
                                  }
-                            
+                             // console.log(result)
                              callback(null,result)
                          }
                 }
@@ -207,7 +218,7 @@ ESQueryDSLTools.prototype.ExecuteQuery = function(criteriaList,index,callback){
 
 ESQueryDSLTools.prototype.PushQuery = function(document,callback){
     
-    var guid = Guid.raw()
+    var guid = uuid.raw()
       
     client.create({
           index: 'elk_open_alert',
@@ -248,6 +259,58 @@ ESQueryDSLTools.prototype.GetDocumentById = function(_id,callback){
              
                 callback(error,response)
             });
+    
+}
+
+
+ESQueryDSLTools.prototype.GetReportTypeQuery = function(callback)
+{
+    
+     
+     var result = []
+      var  query = {
+              
+                "index" : 'elk_open_alert',
+                "body" : {
+                    "query" : {
+                        "match" :{
+                            "Type" : "Report"
+                        }
+                       
+                        }
+                    }
+                }
+    
+    
+      client.search(query).then(function (body,err)
+     {
+            if(err)
+                          {
+                              console.log(err)
+                              callback(err,"")
+                          }
+                      if(body)
+                         {
+                       
+                             var hits = body.hits.hits;
+
+                             if(hits.length > 0)
+                                 {
+                                     for(j=0;j<hits.length;j++)
+                                         {
+
+                                            result.push(hits[j]['_source'])
+                                         }
+                                     
+                                 }
+                       
+                             callback(null,result)
+                         }
+          
+          
+      })
+      
+   
     
 }
 

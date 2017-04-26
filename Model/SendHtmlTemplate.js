@@ -11,20 +11,20 @@ function SendHtmlTemplate() {
 
 var sendMail = function(toAddress, subject, content, next){
       var mailOptions = {
-        from: "no-replay@wafacash.com",
+        from: "no-replay@monitoring.com",
         to: toAddress,
         replyTo: "noreplay@monitoring.com",
         subject: subject,
         html: content
       };
 
-  transporter.sendMail(mailOptions, next);
+  smtpTransport.sendMail(mailOptions, next);
 }; 
 
 
 
 
-/* var transporter = nodemailer.createTransport(smtpTransport({
+/* var smtpTransport = nodemailer.createTransport(smtpTransport({
     host: 'mail.wafacash.com',
     port: 25,
     auth: {
@@ -39,14 +39,14 @@ var sendMail = function(toAddress, subject, content, next){
 var smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-        user: 'login@gmail.com',
-        pass: 'password'
+        user: 'ylasmak@gmail.com',
+        pass: 'machallah'
     }
 });
 
 
 SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
-  // res.render('index', { title: 'Express' });
+ 
   // specify jade template to load
   var template = process.cwd() + '/views/email.ejs';
 
@@ -59,10 +59,8 @@ SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
     }
     else {       
       
-        var compiled = ejs.compile(fs.readFileSync(template, 'utf8'));
-       
-        var html = compiled({ datas : data  });
-        
+        var compiled = ejs.compile(fs.readFileSync(template, 'utf8'));       
+        var html = compiled({ datas : data  });        
  
       sendMail(sendToList, title, html, function(err, response){
       if(err)
