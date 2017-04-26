@@ -5,7 +5,7 @@ function PrintPDF()
     
 }
 
- PrintPDF.prototype.UrlToPDF  = function(url,reportname,reportType,reportFolder,callback){
+ PrintPDF.prototype.UrlToPDF  = function(url,reportname,reportFolder,callback){
      
     var printReport = 0;
      var child=require('child_process');
@@ -13,21 +13,16 @@ function PrintPDF()
      
     var args=[];
      
-    args=args.concat([__dirname + '/bridge.js', url,reportname,reportType,reportFolder]);
+    args=args.concat([__dirname + '/bridge.js', url,reportname,'pdf',reportFolder]);
 
-    // console.log(args)
+   // console.log(args)
     var phantom=child.spawn('phantomjs',args);
      
     phantom.stdout.on('data',function(data){
-          
        
-        value =data.toString('utf8') 
-       
-        if(value.trim() == '200')
-            {
-                return callback(200,null)
-               
-            }       
+        value =data.toString('utf8').trim() 
+        console.log(value)
+        return callback(value,null)
         
     });
      
@@ -36,12 +31,12 @@ function PrintPDF()
     });
     var hasErrors=false;
     phantom.on('error',function(){
-          return callback(500,'phantom stderr: Error ');
+          return callback(null,'phantom stderr: Error ');
     });
     phantom.on('exit',function(code){
        // hasErrors=true; //if phantom exits it is always an error
        if(code!=0){
-        return callback(500,'phantom exit: '+code);
+        return callback(null,'phantom exit: '+code);
        }
     });
     

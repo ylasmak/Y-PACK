@@ -5,7 +5,7 @@ var fs = require('fs');
 //var events = require('./Model/EVENTS');
 var email = require('./Model/SendHtmlTemplate');
 var sendSMS = require('./Model/SendSMS')
-//var mongo_db = require('./data_base/mongodb');
+async = require("async");
 var elastickSerach = require('./Model/ESQueryDSLTools')
 var printPDF = require('./Model/PrintPDF')
 var reporting = require('./Model/ReportModel')
@@ -148,11 +148,11 @@ router.get('/Sending_report',function(req,res) {
                               fs.mkdirSync(tmp_folder);
                           }
                        
-                       result.forEach(function(report){
+                       async.each(result,function(report,callback) 
+                                 {
                            
-                           var pdf = new printPDF()
-                           pdf.UrlToPDF(report['dashbord_url'],report['Name'],'pdf',tmp_folder,
-                                       function(err,result)
+                             var pdf = new printPDF()
+                           pdf.UrlToPDF(report['dashbord_url'],report['Name'],tmp_folder, function(filePath,err)
                                        {
                                if(err)
                                    {
@@ -160,19 +160,32 @@ router.get('/Sending_report',function(req,res) {
                                    }
                                else
                                    {
-                                      console.log(result)
+                                       console.log(filePath)
+                                     var sendSMTPMail = new email();
+                                sendSMTPMail.SendeMailReport(report['Send_to'],report['Title'],report['Text'],filePath,function(err,result){
+                                   if(err)
+                                       {
+                                         console.log(err)
+
+                                       }
+                                  callback()
+
+                                        })
                                    }
                              
                                
                            })
                            
-                       })                       
-                       
-                   }
+                       },function(err)
+                           {
+                           console.log('end')    
+                           res.send('200')
+                           })
+                        
             }
     
-    })
-})
+    }
+})})
 
 
 //Graphical UI

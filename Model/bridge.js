@@ -37,8 +37,8 @@ if (system.args.length < 3 || system.args.length > 5) {
         var path  = folder + output+'.pdf';         
           
         page.render(path);
-       // console.log(path)
-        console.log('200')
+       console.log(path)
+        //console.log('200')
         phantom.exit();
       }, waitTime);
     }

@@ -22,7 +22,23 @@ var sendMail = function(toAddress, subject, content, next){
 }; 
 
 
+var sendMailwithPJ = function(toAddress, subject, content,attachment_path ,next){
+      var mailOptions = {
+        from: "no-replay@monitoring.com",
+        to: toAddress,
+        replyTo: "noreplay@monitoring.com",
+        subject: subject,
+        html: content,
+        attachments: [
+          {   // filename and content type is derived from path
+              path: attachment_path
+          },
+          
+      ]
+      };
 
+  smtpTransport.sendMail(mailOptions, next);
+}; 
 
 /* var smtpTransport = nodemailer.createTransport(smtpTransport({
     host: 'mail.wafacash.com',
@@ -76,7 +92,39 @@ SendHtmlTemplate.prototype.SendeMail = function(sendToList,title,data,callback){
   });
 };
 
+SendHtmlTemplate.prototype.SendeMailReport = function(sendToList,title,text,reportPath,callback){
+ 
+  // specify jade template to load
+  var template = process.cwd() + '/views/email_report.ejs';
+    
 
+  // get template from file system
+  fs.readFile(template, 'utf8', function(err, file){
+    if(err){
+      //handle errors
+      console.log(err);
+    
+    }
+    else {       
+      
+        var compiled = ejs.compile(fs.readFileSync(template, 'utf8'));       
+        var html = compiled({ text : text  });        
+ 
+        
+      sendMailwithPJ(sendToList, title, html,reportPath, function(err, response){
+      if(err)
+          {
+          console.log(err)
+          }
+          
+          console.log(response)
+          callback(err,response)
+      
+          
+      });
+    }
+  });
+};
 
 
 module.exports = SendHtmlTemplate
