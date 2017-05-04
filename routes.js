@@ -37,7 +37,7 @@ router.get('/serach_lookup', function(req, res) {
                       
                        result.forEach(function(notificationDefinition)
                             {
-                          console.log(notificationDefinition)
+                       
                               
                             var notification = notificationDefinition['_source']                             
                             var mail_result = {'text_mail' : notification["Text"], 'data' :[],_id :notificationDefinition['_id'] };                        
@@ -94,32 +94,35 @@ router.get('/serach_lookup', function(req, res) {
                                                                     }
                                                                     
                                                                 }
+                                                                 
+                                                                 elastic.UpdateLastExecutionDate(notificationDefinition['_id'],currentDate,function(err,response)
+                                                                                                {
+                                                                     
+                                                                     if(err)
+                                                                         {
+                                                                             console.log('updating last execution date:' +notificationDefinition['_id'] +'datetime:'+currentDate)
+                                                                         }
+                                                                     else
+                                                                         {
+                                                                             console.log('Updating Last Execution DateTime:'+notificationDefinition['_id'] +'datetime:'+currentDate)
+                                                                         }
+                                                                 })
 
                                                              }
                                                     }  ) 
                                                 
-                                   /* var mongo = new mongo_db()
-                                    mongo.updateExecutionDate('events',notification['_id'], currentDate,function(err,object)
-                                                             {
-                                        if(err)
-                                            {
-                                                console.log(err)
-                                                 res.send("Error 500") 
-                                            }
-
-
-                                    })*/
+                                  
                                 }
                                 
                               
                                 
                             })
-                      // res.send("OK 200")
+                      res.send("OK 200")
                      
                    }
                else
                    {
-                       //  res.send("OK 200")
+                        res.send("OK 200")
                    }
            }
        
@@ -160,7 +163,7 @@ router.get('/Sending_report',function(req,res) {
                                    }
                                else
                                    {
-                                       console.log(filePath)
+                                       
                                      var sendSMTPMail = new email();
                                 sendSMTPMail.SendeMailReport(report['Send_to'],report['Title'],report['Text'],filePath,function(err,result){
                                    if(err)
@@ -281,7 +284,7 @@ router.get('/addSMSNotification',urlencodedParser,function(req,res) {
                  search.GetDocumentById(req.query._id,function(err,result){
                    if(result)
                        {  
-                           console.log(result)
+                          
                              res.render('pages/smsNotification.ejs',{notification : result})
                        }
                  })
@@ -302,10 +305,10 @@ router.get('/addEmailReport',urlencodedParser,function(req,res) {
     if(req.query._id)
         {
             var search = new  elastickSerach()
-                 console.log(req.query._id)
+               
                  search.GetDocumentById(req.query._id,function(err,result){
                    if(result)
-                       {  console.log(result)                            
+                       {                          
                              res.render('pages/emailReport.ejs',{notification : result})
                        }
                  })
@@ -573,19 +576,55 @@ router.post('/SaveEmailReport',urlencodedParser,function(req,res) {
     
   
      var search = new  elastickSerach()
-     search.PushQuery(entry,function(err,result)
+     
+     
+      if(! data['_id'])
+          {
+             search.PushQuery(entry,function(err,result)
+                             {
+                 if(err)
                      {
-         if(err)
-             {
-                 console.log(err)
-             }
-         else
-             {
-                  req.method = 'get';
-                res.redirect('/');
-             }
-         
-     })
+                         console.log(err)
+                     }
+                 else
+                     {
+                          req.method = 'get';
+                        res.redirect('/');
+                     }
+
+             })
+          }
+    else
+        {
+               search.GetDocumentById(data['_id'],function(err,result)
+                                  {
+                
+                if(!err)
+                    {
+                        entry['Last_execution'] = result['_source']['Last_execution']
+                          search.DeleteQuery(data['_id'],function(err,result){
+                                 if(!err)
+                                     {
+                                       search.PushQuery(entry,function(err,result)
+                                                     {
+                                         if(err)
+                                             {
+                                                 console.log(err)
+                                             }
+                                         else
+                                             {
+                                                  req.method = 'get';
+                                                res.redirect('/');
+                                             }
+
+                                     })     
+                                     }
+                             })
+                        
+                    }
+                
+            })
+        }
     
 })
 

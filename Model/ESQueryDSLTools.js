@@ -79,8 +79,7 @@ var buildQuery = function (criteriaList,index,lastExecutionDate){
                     }
                 }
             
-    var actionDate1 = new Date()    
-      actionDate1.setDate(actionDate1.getDate() - 15)
+   
     
         var dateCritérai = {
                 "range" : {
@@ -263,8 +262,7 @@ ESQueryDSLTools.prototype.GetDocumentById = function(_id,callback){
 }
 
 
-ESQueryDSLTools.prototype.GetReportTypeQuery = function(callback)
-{
+ESQueryDSLTools.prototype.GetReportTypeQuery = function(callback){
     
      
      var result = []
@@ -313,6 +311,26 @@ ESQueryDSLTools.prototype.GetReportTypeQuery = function(callback)
    
     
 }
+
+ESQueryDSLTools.prototype.UpdateLastExecutionDate = function(_id,executionDate,callback){
+    
+    client.update({
+          index: 'elk_open_alert',
+          type: 'alert',
+          refresh : 'true',
+          id: _id,
+          body: {
+            
+            doc: {
+              Last_execution: executionDate
+            }
+          }
+        }, function (error, response) {
+                callback(error,response)
+         
+        })
+    
+} 
 
 
 module.exports = ESQueryDSLTools
