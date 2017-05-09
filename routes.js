@@ -1,8 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-
-//var events = require('./Model/EVENTS');
+    
 var email = require('./Model/SendHtmlTemplate');
 var sendSMS = require('./Model/SendSMS')
 async = require("async");
@@ -22,8 +21,7 @@ router.get('/serach_lookup', function(req, res) {
    
     var elastic = new elastickSerach()
     
-    elastic.ExecuteAllQuery('elk_open_alert',function(err,result)
-         {
+    elastic.ExecuteAllQuery('elk_open_alert',function(err,result)  {
        if(err)
            {
                console.log(err)

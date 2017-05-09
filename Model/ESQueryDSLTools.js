@@ -63,9 +63,6 @@ var buildQuery = function (criteriaList,index,lastExecutionDate){
    var actionDate = new Date() 
    var index =  TodayIndex(actionDate,index)
    
-  
-  // index =  "afriqua_web_transaction_performence-2017.04.19"  
-        
     
    var  query = {
               
